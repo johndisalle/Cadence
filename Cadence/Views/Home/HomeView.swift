@@ -168,8 +168,9 @@ struct HomeView: View {
                 Circle()
                     .fill(CadenceTheme.teal.opacity(0.06))
                     .frame(width: 200, height: 200)
-                Text("🌿")
-                    .font(.system(size: 56))
+                Image(systemName: "leaf.fill")
+                    .font(.system(size: 48))
+                    .foregroundStyle(CadenceTheme.teal)
             }
 
             VStack(spacing: CadenceTheme.spacingSM) {
@@ -197,7 +198,9 @@ struct HomeView: View {
                             createEventFromTemplate(template)
                         } label: {
                             HStack(spacing: 4) {
-                                Text(template.emoji)
+                                Image(systemName: template.emoji)
+                                    .font(.caption)
+                                    .foregroundStyle(Color(hex: template.accentColorHex))
                                 Text(template.name)
                                     .font(.caption.weight(.medium))
                                     .foregroundStyle(CadenceTheme.textPrimary)

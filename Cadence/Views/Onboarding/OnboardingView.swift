@@ -146,8 +146,9 @@ struct OnboardingView: View {
             }
         } label: {
             HStack(spacing: CadenceTheme.spacingMD) {
-                Text(pack.emoji)
-                    .font(.system(size: 36))
+                Image(systemName: pack.emoji)
+                    .font(.system(size: 28))
+                    .foregroundStyle(CadenceTheme.teal)
 
                 VStack(alignment: .leading, spacing: 2) {
                     Text(pack.name)
@@ -238,7 +239,9 @@ struct OnboardingView: View {
         return FlowLayout(spacing: CadenceTheme.spacingSM) {
             ForEach(templates) { template in
                 HStack(spacing: 4) {
-                    Text(template.emoji)
+                    Image(systemName: template.emoji)
+                        .font(.caption)
+                        .foregroundStyle(Color(hex: template.accentColorHex))
                     Text(template.name)
                         .font(.caption)
                         .foregroundStyle(CadenceTheme.textPrimary)
@@ -342,8 +345,9 @@ struct TemplatePickerView: View {
             }
         } label: {
             HStack(spacing: CadenceTheme.spacingSM) {
-                Text(template.emoji)
+                Image(systemName: template.emoji)
                     .font(.title3)
+                    .foregroundStyle(Color(hex: template.accentColorHex))
 
                 VStack(alignment: .leading, spacing: 2) {
                     Text(template.name)

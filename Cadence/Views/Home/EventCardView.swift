@@ -30,8 +30,9 @@ struct EventCardView: View {
         VStack(alignment: .leading, spacing: CadenceTheme.spacingSM) {
             // Top row: emoji + quick log
             HStack {
-                Text(event.emoji)
-                    .font(.system(size: 40))
+                Image(systemName: event.emoji)
+                    .font(.system(size: 34))
+                    .foregroundStyle(event.accentColor)
 
                 Spacer()
 
@@ -119,7 +120,7 @@ struct EventCardView: View {
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
     let container = try! ModelContainer(for: Event.self, LogEntry.self, configurations: config)
 
-    let event = Event(name: "Water Plants", emoji: "🪴", accentColorHex: "#7FA886", category: .home)
+    let event = Event(name: "Water Plants", emoji: "leaf.fill", accentColorHex: "#7FA886", category: .home)
     container.mainContext.insert(event)
 
     let log1 = LogEntry(timestamp: Date().addingTimeInterval(-86400 * 5), event: event)

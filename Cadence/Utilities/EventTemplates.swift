@@ -41,7 +41,7 @@ extension EventTemplate {
 
     static let takeMedication = EventTemplate(
         name: "Take Medication",
-        emoji: "💊",
+        emoji: "pill.fill",
         category: .health,
         accentColorHex: "#5BA4A4",
         suggestedIntervalDays: 1,
@@ -50,7 +50,7 @@ extension EventTemplate {
 
     static let exercise = EventTemplate(
         name: "Exercise",
-        emoji: "🏃",
+        emoji: "figure.run",
         category: .health,
         accentColorHex: "#E07A6B",
         suggestedIntervalDays: 2,
@@ -59,7 +59,7 @@ extension EventTemplate {
 
     static let dentistVisit = EventTemplate(
         name: "Dentist Visit",
-        emoji: "🦷",
+        emoji: "mouth.fill",
         category: .health,
         accentColorHex: "#7EB5D6",
         suggestedIntervalDays: 180,
@@ -68,7 +68,7 @@ extension EventTemplate {
 
     static let eyeExam = EventTemplate(
         name: "Eye Exam",
-        emoji: "👁️",
+        emoji: "eye.fill",
         category: .health,
         accentColorHex: "#9B8EC4",
         suggestedIntervalDays: 365,
@@ -77,7 +77,7 @@ extension EventTemplate {
 
     static let haircut = EventTemplate(
         name: "Haircut",
-        emoji: "✂️",
+        emoji: "scissors",
         category: .personal,
         accentColorHex: "#9B8EC4",
         suggestedIntervalDays: 28,
@@ -86,7 +86,7 @@ extension EventTemplate {
 
     static let weighIn = EventTemplate(
         name: "Weigh In",
-        emoji: "⚖️",
+        emoji: "scalemass.fill",
         category: .health,
         accentColorHex: "#5BA4A4",
         suggestedIntervalDays: 7,
@@ -97,7 +97,7 @@ extension EventTemplate {
 
     static let waterPlants = EventTemplate(
         name: "Water Plants",
-        emoji: "🪴",
+        emoji: "leaf.fill",
         category: .home,
         accentColorHex: "#7FA886",
         suggestedIntervalDays: 3,
@@ -106,7 +106,7 @@ extension EventTemplate {
 
     static let changeHVACFilter = EventTemplate(
         name: "Change HVAC Filter",
-        emoji: "🌬️",
+        emoji: "fan.fill",
         category: .home,
         accentColorHex: "#7EB5D6",
         suggestedIntervalDays: 90,
@@ -115,7 +115,7 @@ extension EventTemplate {
 
     static let cleanHouse = EventTemplate(
         name: "Clean House",
-        emoji: "🧹",
+        emoji: "sparkles",
         category: .home,
         accentColorHex: "#C4A882",
         suggestedIntervalDays: 7,
@@ -124,7 +124,7 @@ extension EventTemplate {
 
     static let laundry = EventTemplate(
         name: "Laundry",
-        emoji: "🧺",
+        emoji: "washer.fill",
         category: .home,
         accentColorHex: "#D4849A",
         suggestedIntervalDays: 4,
@@ -133,7 +133,7 @@ extension EventTemplate {
 
     static let changeBedSheets = EventTemplate(
         name: "Change Bed Sheets",
-        emoji: "🛏️",
+        emoji: "bed.double.fill",
         category: .home,
         accentColorHex: "#9B8EC4",
         suggestedIntervalDays: 14,
@@ -142,7 +142,7 @@ extension EventTemplate {
 
     static let mowLawn = EventTemplate(
         name: "Mow Lawn",
-        emoji: "🌱",
+        emoji: "leaf.arrow.circlepath",
         category: .home,
         accentColorHex: "#7FA886",
         suggestedIntervalDays: 10,
@@ -153,7 +153,7 @@ extension EventTemplate {
 
     static let oilChange = EventTemplate(
         name: "Oil Change",
-        emoji: "🛢️",
+        emoji: "oilcan.fill",
         category: .vehicle,
         accentColorHex: "#C4A882",
         suggestedIntervalDays: 90,
@@ -162,7 +162,7 @@ extension EventTemplate {
 
     static let carWash = EventTemplate(
         name: "Car Wash",
-        emoji: "🧽",
+        emoji: "bubbles.and.sparkles.fill",
         category: .vehicle,
         accentColorHex: "#7EB5D6",
         suggestedIntervalDays: 14,
@@ -171,7 +171,7 @@ extension EventTemplate {
 
     static let tireRotation = EventTemplate(
         name: "Tire Rotation",
-        emoji: "🛞",
+        emoji: "tire",
         category: .vehicle,
         accentColorHex: "#2C3E5A",
         suggestedIntervalDays: 180,
@@ -180,7 +180,7 @@ extension EventTemplate {
 
     static let gasFillUp = EventTemplate(
         name: "Gas Fill-up",
-        emoji: "⛽",
+        emoji: "fuelpump.fill",
         category: .vehicle,
         accentColorHex: "#E5A84B",
         suggestedIntervalDays: 7,
@@ -191,7 +191,7 @@ extension EventTemplate {
 
     static let feedPet = EventTemplate(
         name: "Feed Pet",
-        emoji: "🐕",
+        emoji: "dog.fill",
         category: .pets,
         accentColorHex: "#C4A882",
         suggestedIntervalDays: 1,
@@ -200,7 +200,7 @@ extension EventTemplate {
 
     static let fleaTickMedication = EventTemplate(
         name: "Flea/Tick Medication",
-        emoji: "🐾",
+        emoji: "pawprint.fill",
         category: .pets,
         accentColorHex: "#E07A6B",
         suggestedIntervalDays: 30,
@@ -209,7 +209,7 @@ extension EventTemplate {
 
     static let vetVisit = EventTemplate(
         name: "Vet Visit",
-        emoji: "🩺",
+        emoji: "stethoscope",
         category: .pets,
         accentColorHex: "#5BA4A4",
         suggestedIntervalDays: 365,
@@ -218,7 +218,7 @@ extension EventTemplate {
 
     static let groomPet = EventTemplate(
         name: "Groom Pet",
-        emoji: "🛁",
+        emoji: "shower.fill",
         category: .pets,
         accentColorHex: "#7EB5D6",
         suggestedIntervalDays: 30,
@@ -229,7 +229,7 @@ extension EventTemplate {
 
     static let callParents = EventTemplate(
         name: "Call Parents",
-        emoji: "📞",
+        emoji: "phone.fill",
         category: .personal,
         accentColorHex: "#D4849A",
         suggestedIntervalDays: 7,
@@ -238,7 +238,7 @@ extension EventTemplate {
 
     static let budgetReview = EventTemplate(
         name: "Budget Review",
-        emoji: "📊",
+        emoji: "chart.bar.fill",
         category: .work,
         accentColorHex: "#2C3E5A",
         suggestedIntervalDays: 30,
@@ -247,7 +247,7 @@ extension EventTemplate {
 
     static let backupPhone = EventTemplate(
         name: "Backup Phone",
-        emoji: "📱",
+        emoji: "iphone.gen3",
         category: .general,
         accentColorHex: "#6B7B8D",
         suggestedIntervalDays: 30,
@@ -256,7 +256,7 @@ extension EventTemplate {
 
     static let replaceToothbrush = EventTemplate(
         name: "Replace Toothbrush",
-        emoji: "🪥",
+        emoji: "mouth.fill",
         category: .personal,
         accentColorHex: "#5BA4A4",
         suggestedIntervalDays: 90,
@@ -289,31 +289,31 @@ extension EventTemplate {
     static let quickStartPacks: [QuickStartPack] = [
         QuickStartPack(
             name: "Home Essentials",
-            emoji: "🏠",
+            emoji: "house.fill",
             description: "Keep your home running smoothly",
             templates: [.waterPlants, .cleanHouse, .changeHVACFilter, .laundry, .changeBedSheets]
         ),
         QuickStartPack(
             name: "Health Basics",
-            emoji: "❤️",
+            emoji: "heart.fill",
             description: "Stay on top of your well-being",
             templates: [.takeMedication, .exercise, .dentistVisit, .haircut]
         ),
         QuickStartPack(
             name: "Pet Parent",
-            emoji: "🐾",
+            emoji: "pawprint.fill",
             description: "Everything for your furry friend",
             templates: [.feedPet, .fleaTickMedication, .vetVisit, .groomPet]
         ),
         QuickStartPack(
             name: "Car Owner",
-            emoji: "🚗",
+            emoji: "car.fill",
             description: "Keep your vehicle in top shape",
             templates: [.oilChange, .carWash, .tireRotation, .gasFillUp]
         ),
         QuickStartPack(
             name: "Full Starter Kit",
-            emoji: "✨",
+            emoji: "sparkles",
             description: "A curated mix of the most popular events",
             templates: [
                 .takeMedication, .exercise, .waterPlants, .cleanHouse,

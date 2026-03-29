@@ -28,8 +28,9 @@ struct EditEventView: View {
                             HStack(spacing: 10) {
                                 let presets = CadenceTheme.emojiPresets[category] ?? CadenceTheme.emojiPresets[.general]!
                                 ForEach(presets, id: \.self) { e in
-                                    Text(e)
+                                    Image(systemName: e)
                                         .font(.title2)
+                                        .foregroundStyle(CadenceTheme.textPrimary)
                                         .padding(8)
                                         .background(
                                             RoundedRectangle(cornerRadius: 10)
@@ -155,7 +156,7 @@ struct EditEventView: View {
         for: Event.self, LogEntry.self,
         configurations: ModelConfiguration(isStoredInMemoryOnly: true)
     )
-    let event = Event(name: "Water Plants", emoji: "🪴", accentColorHex: "#7FA886", category: .home)
+    let event = Event(name: "Water Plants", emoji: "leaf.fill", accentColorHex: "#7FA886", category: .home)
     container.mainContext.insert(event)
 
     return EditEventView(event: event)

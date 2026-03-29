@@ -6,7 +6,7 @@ struct AddEventView: View {
     @Environment(\.dismiss) private var dismiss
 
     @State private var name = ""
-    @State private var selectedEmoji = "📌"
+    @State private var selectedEmoji = "pin.fill"
     @State private var selectedColorHex = CadenceTheme.accentPresets[0].hex
     @State private var selectedCategory: EventCategory = .general
     @State private var notes = ""
@@ -53,8 +53,9 @@ struct AddEventView: View {
                                     selectedEmoji = emoji
                                 }
                             } label: {
-                                Text(emoji)
-                                    .font(.system(size: 28))
+                                Image(systemName: emoji)
+                                    .font(.system(size: 22))
+                                    .foregroundStyle(CadenceTheme.textPrimary)
                                     .frame(width: 48, height: 48)
                                     .background(
                                         RoundedRectangle(cornerRadius: 12)

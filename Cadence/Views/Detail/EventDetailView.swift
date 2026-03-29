@@ -84,8 +84,9 @@ struct EventDetailView: View {
         ScrollView {
             VStack(spacing: CadenceTheme.spacingLG) {
                 // Large emoji
-                Text(event.emoji)
-                    .font(.system(size: 60))
+                Image(systemName: event.emoji)
+                    .font(.system(size: 52))
+                    .foregroundStyle(event.accentColor)
                     .padding(.top, CadenceTheme.spacingMD)
 
                 // Stats box
@@ -413,7 +414,7 @@ struct EventDetailView: View {
         for: Event.self, LogEntry.self,
         configurations: ModelConfiguration(isStoredInMemoryOnly: true)
     )
-    let event = Event(name: "Water Plants", emoji: "🪴", accentColorHex: "#7FA886", category: .home)
+    let event = Event(name: "Water Plants", emoji: "leaf.fill", accentColorHex: "#7FA886", category: .home)
     let cal = Calendar.current
     let now = Date()
     for i in stride(from: 0, to: 60, by: 3) {

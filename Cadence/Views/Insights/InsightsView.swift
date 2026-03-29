@@ -114,9 +114,10 @@ struct InsightsView: View {
 
     private func eventSummaryRow(_ summary: EventSummary) -> some View {
         HStack(spacing: 12) {
-            Text(summary.emoji)
+            Image(systemName: summary.emoji)
                 .font(.title2)
                 .frame(width: 36)
+                .foregroundStyle(summary.onTrack ? CadenceTheme.sage : CadenceTheme.coral)
 
             VStack(alignment: .leading, spacing: 2) {
                 Text(summary.eventName)

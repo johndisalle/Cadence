@@ -6,7 +6,7 @@ import SwiftUI
 final class Event {
     var id: UUID = UUID()
     var name: String = ""
-    var emoji: String = "📌"
+    var emoji: String = "pin.fill"
     var accentColorHex: String = "#5BA4A4"
     var createdAt: Date = Date()
     @Relationship(deleteRule: .cascade, inverse: \LogEntry.event)
@@ -46,7 +46,7 @@ final class Event {
 
     init(
         name: String,
-        emoji: String = "📌",
+        emoji: String = "pin.fill",
         accentColorHex: String = "#5BA4A4",
         category: EventCategory = .general,
         customNotes: String? = nil,
