@@ -81,8 +81,8 @@ struct CadenceTimelineProvider: TimelineProvider {
         CadenceEntry(
             date: Date(),
             events: [
-                WidgetEvent(eventID: "1", name: "Medication", emoji: "💊", daysSince: 0.5, urgency: 0.2, rhythm: "Daily", colorHex: "#5BA4A4"),
-                WidgetEvent(eventID: "2", name: "Water Plants", emoji: "🪴", daysSince: 2.8, urgency: 0.8, rhythm: "Every 3 days", colorHex: "#7FA886"),
+                WidgetEvent(eventID: "1", name: "Medication", emoji: "pill.fill", daysSince: 0.5, urgency: 0.2, rhythm: "Daily", colorHex: "#5BA4A4"),
+                WidgetEvent(eventID: "2", name: "Water Plants", emoji: "leaf.fill", daysSince: 2.8, urgency: 0.8, rhythm: "Every 3 days", colorHex: "#7FA886"),
             ]
         )
     }
@@ -430,7 +430,7 @@ struct CadenceWidgetBundle: WidgetBundle {
     CadenceWidget()
 } timeline: {
     CadenceEntry(date: Date(), events: [
-        WidgetEvent(eventID: "1", name: "Medication", emoji: "💊", daysSince: 0.5, urgency: 0.2, rhythm: "Daily", colorHex: "#5BA4A4"),
+        WidgetEvent(eventID: "1", name: "Medication", emoji: "pill.fill", daysSince: 0.5, urgency: 0.2, rhythm: "Daily", colorHex: "#5BA4A4"),
     ])
 }
 
@@ -438,9 +438,9 @@ struct CadenceWidgetBundle: WidgetBundle {
     CadenceWidget()
 } timeline: {
     CadenceEntry(date: Date(), events: [
-        WidgetEvent(eventID: "1", name: "Medication", emoji: "💊", daysSince: 0.5, urgency: 0.2, rhythm: "Daily", colorHex: "#5BA4A4"),
-        WidgetEvent(eventID: "2", name: "Plants", emoji: "🪴", daysSince: 2.8, urgency: 0.8, rhythm: "Every 3 days", colorHex: "#7FA886"),
-        WidgetEvent(eventID: "3", name: "Exercise", emoji: "🏃", daysSince: 1.2, urgency: 0.4, rhythm: "Every 2 days", colorHex: "#E07A6B"),
+        WidgetEvent(eventID: "1", name: "Medication", emoji: "pill.fill", daysSince: 0.5, urgency: 0.2, rhythm: "Daily", colorHex: "#5BA4A4"),
+        WidgetEvent(eventID: "2", name: "Plants", emoji: "leaf.fill", daysSince: 2.8, urgency: 0.8, rhythm: "Every 3 days", colorHex: "#7FA886"),
+        WidgetEvent(eventID: "3", name: "Exercise", emoji: "figure.run", daysSince: 1.2, urgency: 0.4, rhythm: "Every 2 days", colorHex: "#E07A6B"),
     ])
 }
 
@@ -448,8 +448,8 @@ struct CadenceWidgetBundle: WidgetBundle {
     CadenceWidget()
 } timeline: {
     CadenceEntry(date: Date(), events: [
-        WidgetEvent(eventID: "1", name: "Medication", emoji: "💊", daysSince: 0.5, urgency: 0.2, rhythm: "Daily", colorHex: "#5BA4A4"),
-        WidgetEvent(eventID: "2", name: "Water Plants", emoji: "🪴", daysSince: 2.8, urgency: 0.8, rhythm: "Every 3 days", colorHex: "#7FA886"),
-        WidgetEvent(eventID: "3", name: "Exercise", emoji: "🏃", daysSince: 1.2, urgency: 0.4, rhythm: "Every 2 days", colorHex: "#E07A6B"),
+        WidgetEvent(eventID: "1", name: "Medication", emoji: "pill.fill", daysSince: 0.5, urgency: 0.2, rhythm: "Daily", colorHex: "#5BA4A4"),
+        WidgetEvent(eventID: "2", name: "Water Plants", emoji: "leaf.fill", daysSince: 2.8, urgency: 0.8, rhythm: "Every 3 days", colorHex: "#7FA886"),
+        WidgetEvent(eventID: "3", name: "Exercise", emoji: "figure.run", daysSince: 1.2, urgency: 0.4, rhythm: "Every 2 days", colorHex: "#E07A6B"),
     ])
 }
