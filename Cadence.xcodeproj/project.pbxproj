@@ -32,6 +32,11 @@
 		A10000023 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000023; };
 		A10000024 /* CadenceIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000024; };
 		A10000025 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B10000025; };
+		A10000040 /* EventTemplates.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000040; };
+		A10000041 /* FlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000041; };
+		A10000042 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000042; };
+		A10000043 /* CloudSyncService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000043; };
+		A10000044 /* FamilySharingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000044; };
 		A10000030 /* CadenceWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000030; };
 		A10000031 /* WidgetExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = C20000001; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
@@ -89,6 +94,11 @@
 		B10000026 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B10000027 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		B10000030 /* CadenceWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CadenceWidget.swift; sourceTree = "<group>"; };
+		B10000040 /* EventTemplates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventTemplates.swift; sourceTree = "<group>"; };
+		B10000041 /* FlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowLayout.swift; sourceTree = "<group>"; };
+		B10000042 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
+		B10000043 /* CloudSyncService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudSyncService.swift; sourceTree = "<group>"; };
+		B10000044 /* FamilySharingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FamilySharingView.swift; sourceTree = "<group>"; };
 		C10000001 /* Cadence.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Cadence.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C20000001 /* CadenceWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = CadenceWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -162,6 +172,7 @@
 				B10000008 /* IntervalEngine.swift */,
 				B10000009 /* NotificationService.swift */,
 				B10000010 /* PDFExportService.swift */,
+				B10000043 /* CloudSyncService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -174,8 +185,17 @@
 				G10000062 /* Insights */,
 				G10000063 /* Settings */,
 				G10000064 /* Components */,
+				G10000065 /* Onboarding */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		G10000065 /* Onboarding */ = {
+			isa = PBXGroup;
+			children = (
+				B10000042 /* OnboardingView.swift */,
+			);
+			path = Onboarding;
 			sourceTree = "<group>";
 		};
 		G10000060 /* Home */ = {
@@ -211,6 +231,7 @@
 			isa = PBXGroup;
 			children = (
 				B10000023 /* SettingsView.swift */,
+				B10000044 /* FamilySharingView.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -220,6 +241,7 @@
 			children = (
 				B10000013 /* EmptyStateView.swift */,
 				B10000014 /* LogButton.swift */,
+				B10000041 /* FlowLayout.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -229,6 +251,7 @@
 			children = (
 				B10000011 /* SampleData.swift */,
 				B10000012 /* Theme.swift */,
+				B10000040 /* EventTemplates.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -390,6 +413,11 @@
 				A10000022 /* PulseRingView.swift in Sources */,
 				A10000023 /* SettingsView.swift in Sources */,
 				A10000024 /* CadenceIntents.swift in Sources */,
+				A10000040 /* EventTemplates.swift in Sources */,
+				A10000041 /* FlowLayout.swift in Sources */,
+				A10000042 /* OnboardingView.swift in Sources */,
+				A10000043 /* CloudSyncService.swift in Sources */,
+				A10000044 /* FamilySharingView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
