@@ -94,21 +94,10 @@ struct LogEventFromWidgetIntent: AppIntent {
 }
 
 // MARK: - Shortcuts Provider
-
-struct CadenceShortcutsProvider: AppShortcutsProvider {
-    static var appShortcuts: [AppShortcut] {
-        AppShortcut(
-            intent: LogEventIntent(),
-            phrases: [
-                "Log \(\.$eventName) in \(.applicationName)",
-                "Record \(\.$eventName) in \(.applicationName)",
-                "Mark \(\.$eventName) done in \(.applicationName)"
-            ],
-            shortTitle: "Log Event",
-            systemImageName: "checkmark.circle.fill"
-        )
-    }
-}
+//
+// Note: AppShortcut phrases with dynamic parameters require AppEnum/AppEntity types.
+// LogEventIntent uses a plain String parameter, so it's available in the Shortcuts app
+// but not as a predefined Siri phrase. Users can create custom Siri Shortcuts manually.
 
 // MARK: - Get Due Events Intent
 
