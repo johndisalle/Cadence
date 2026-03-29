@@ -16,6 +16,9 @@ struct HomeView: View {
     @State private var showAddEvent = false
     @State private var showAsGrid = true
     @State private var sortMode: HomeSortMode = .dueSoonest
+    @State private var showPaywall = false
+
+    private var premium: PremiumManager { .shared }
 
     private var filteredEvents: [Event] {
         let base = searchText.isEmpty
@@ -69,7 +72,11 @@ struct HomeView: View {
                     .accessibilityLabel(showAsGrid ? "Switch to list" : "Switch to grid")
 
                     Button {
-                        showAddEvent = true
+                        if premium.canAddEvent(currentCount: events.count) {
+                            showAddEvent = true
+                        } else {
+                            showPaywall = true
+                        }
                     } label: {
                         Image(systemName: "plus.circle.fill")
                             .imageScale(.large)
@@ -80,6 +87,9 @@ struct HomeView: View {
             }
             .sheet(isPresented: $showAddEvent) {
                 AddEventView()
+            }
+            .sheet(isPresented: $showPaywall) {
+                PaywallView()
             }
         }
     }

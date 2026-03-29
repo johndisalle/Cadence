@@ -3,6 +3,9 @@ import SwiftData
 
 struct InsightsView: View {
     @Query private var events: [Event]
+    @State private var showPaywall = false
+
+    private var premium: PremiumManager { .shared }
 
     private var pulse: CadencePulse {
         InsightsEngine.generatePulse(events: events)
@@ -11,7 +14,9 @@ struct InsightsView: View {
     var body: some View {
         NavigationStack {
             Group {
-                if events.isEmpty {
+                if !premium.canUseInsights() {
+                    insightsPaywall
+                } else if events.isEmpty {
                     EmptyStateView(
                         symbolName: "waveform.path.ecg",
                         title: "No Insights Yet",
@@ -31,7 +36,56 @@ struct InsightsView: View {
             }
             .navigationTitle("Insights")
             .background(CadenceTheme.backgroundPrimary)
+            .sheet(isPresented: $showPaywall) {
+                PaywallView()
+            }
         }
+    }
+
+    // MARK: - Insights Paywall Teaser
+
+    private var insightsPaywall: some View {
+        VStack(spacing: CadenceTheme.spacingLG) {
+            Spacer()
+
+            Image(systemName: "waveform.path.ecg")
+                .font(.system(size: 56, weight: .light))
+                .foregroundStyle(CadenceTheme.teal.opacity(0.4))
+
+            VStack(spacing: CadenceTheme.spacingSM) {
+                Text("AI Rhythm Insights")
+                    .font(.title3.weight(.semibold))
+                    .foregroundStyle(CadenceTheme.textPrimary)
+
+                Text("Get your weekly Cadence Pulse score, smart suggestions, and seasonal awareness.")
+                    .font(.subheadline)
+                    .foregroundStyle(CadenceTheme.textSecondary)
+                    .multilineTextAlignment(.center)
+            }
+
+            Button {
+                showPaywall = true
+            } label: {
+                Label("Unlock with Cadence Pro", systemImage: "crown.fill")
+                    .font(.headline)
+                    .foregroundStyle(.white)
+                    .padding(.horizontal, CadenceTheme.spacingLG)
+                    .padding(.vertical, 14)
+                    .background(
+                        Capsule().fill(
+                            LinearGradient(
+                                colors: [CadenceTheme.teal, CadenceTheme.sage],
+                                startPoint: .leading,
+                                endPoint: .trailing
+                            )
+                        )
+                    )
+            }
+
+            Spacer()
+            Spacer()
+        }
+        .padding(CadenceTheme.spacingLG)
     }
 
     // MARK: - Pulse Section

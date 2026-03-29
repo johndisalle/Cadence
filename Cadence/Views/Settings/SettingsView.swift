@@ -12,6 +12,9 @@ struct SettingsView: View {
     @State private var showResetConfirmation = false
     @State private var showExportSheet = false
     @State private var exportedPDFData: Data?
+    @State private var showPaywall = false
+
+    private var premium: PremiumManager { .shared }
 
     private let appVersion: String = {
         let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
@@ -22,6 +25,9 @@ struct SettingsView: View {
     var body: some View {
         NavigationStack {
             List {
+                if !premium.isPremium {
+                    premiumBannerSection
+                }
                 appearanceSection
                 notificationsSection
                 dataSection
@@ -34,6 +40,9 @@ struct SettingsView: View {
                 if let data = exportedPDFData {
                     ShareSheet(items: [data])
                 }
+            }
+            .sheet(isPresented: $showPaywall) {
+                PaywallView()
             }
         }
     }
@@ -130,6 +139,50 @@ struct SettingsView: View {
                 }
             }
             .listRowBackground(CadenceTheme.backgroundSecondary)
+        }
+    }
+
+    // MARK: - Premium Banner
+
+    private var premiumBannerSection: some View {
+        Section {
+            Button {
+                showPaywall = true
+            } label: {
+                HStack(spacing: CadenceTheme.spacingMD) {
+                    Image(systemName: "crown.fill")
+                        .font(.title2)
+                        .foregroundStyle(
+                            LinearGradient(
+                                colors: [CadenceTheme.sand, CadenceTheme.coral],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            )
+                        )
+
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Upgrade to Cadence Pro")
+                            .font(.subheadline.weight(.semibold))
+                            .foregroundStyle(CadenceTheme.textPrimary)
+                        Text("Unlimited events, insights, export & more")
+                            .font(.caption)
+                            .foregroundStyle(CadenceTheme.textSecondary)
+                    }
+
+                    Spacer()
+
+                    Image(systemName: "chevron.right")
+                        .font(.caption)
+                        .foregroundStyle(CadenceTheme.textTertiary)
+                }
+            }
+            .listRowBackground(
+                LinearGradient(
+                    colors: [CadenceTheme.teal.opacity(0.08), CadenceTheme.sage.opacity(0.08)],
+                    startPoint: .leading,
+                    endPoint: .trailing
+                )
+            )
         }
     }
 

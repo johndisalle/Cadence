@@ -30,12 +30,24 @@ struct CadenceApp: App {
 
 struct RootView: View {
     @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
+    @AppStorage("appearanceMode") private var appearanceMode: String = "system"
+
+    private var colorScheme: ColorScheme? {
+        switch appearanceMode {
+        case "light": return .light
+        case "dark": return .dark
+        default: return nil
+        }
+    }
 
     var body: some View {
-        if hasCompletedOnboarding {
-            ContentView()
-        } else {
-            OnboardingView()
+        Group {
+            if hasCompletedOnboarding {
+                ContentView()
+            } else {
+                OnboardingView()
+            }
         }
+        .preferredColorScheme(colorScheme)
     }
 }
