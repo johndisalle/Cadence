@@ -3,6 +3,11 @@ import SwiftUI
 import SwiftData
 import AppIntents
 
+// NOTE: In a production Xcode project, Event, LogEntry, IntervalEngine, and Color+Hex
+// would live in a shared framework (e.g. "CadenceKit") that both the main app and the
+// widget extension link against. For now, these model files must be added to the widget
+// target's Compile Sources in Build Phases.
+
 // MARK: - Timeline Provider
 
 struct CadenceTimelineProvider: TimelineProvider {
@@ -22,8 +27,8 @@ struct CadenceTimelineProvider: TimelineProvider {
         CadenceEntry(
             date: Date(),
             events: [
-                WidgetEvent(name: "Medication", emoji: "💊", daysSince: 0.5, urgency: 0.2, rhythm: "Daily", colorHex: "#5BA4A4"),
-                WidgetEvent(name: "Water Plants", emoji: "🪴", daysSince: 2.8, urgency: 0.8, rhythm: "Every 3 days", colorHex: "#7FA886"),
+                WidgetEvent(eventID: UUID().uuidString, name: "Medication", emoji: "💊", daysSince: 0.5, urgency: 0.2, rhythm: "Daily", colorHex: "#5BA4A4"),
+                WidgetEvent(eventID: UUID().uuidString, name: "Water Plants", emoji: "🪴", daysSince: 2.8, urgency: 0.8, rhythm: "Every 3 days", colorHex: "#7FA886"),
             ]
         )
     }
@@ -55,6 +60,7 @@ struct CadenceTimelineProvider: TimelineProvider {
                 let stats = IntervalEngine.compute(for: event)
                 let daysSince = event.daysSinceLastLog ?? 0
                 return WidgetEvent(
+                    eventID: event.id.uuidString,
                     name: event.name,
                     emoji: event.emoji,
                     daysSince: daysSince,
@@ -73,6 +79,7 @@ struct CadenceTimelineProvider: TimelineProvider {
 
 struct WidgetEvent: Identifiable {
     let id = UUID()
+    let eventID: String
     let name: String
     let emoji: String
     let daysSince: Double
@@ -88,6 +95,20 @@ struct WidgetEvent: Identifiable {
         }
         let days = Int(daysSince)
         return days == 1 ? "1d ago" : "\(days)d ago"
+    }
+
+    /// Days-since formatted for compact display (lock screen)
+    var daysSinceLabel: String {
+        if daysSince < 0.042 { return "0d" }
+        if daysSince < 1 { return "\(Int(daysSince * 24))h" }
+        return "\(Int(daysSince))d"
+    }
+
+    /// Urgency indicator symbol for lock screen
+    var urgencyIndicator: String {
+        if urgency > 0.8 { return "!!" }
+        if urgency > 0.5 { return "!" }
+        return ""
     }
 }
 
@@ -133,10 +154,15 @@ struct CadenceWidgetSmallView: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding()
+        .widgetURL(
+            entry.events.first.map { event in
+                URL(string: "cadence://event/\(event.eventID)")!
+            }
+        )
     }
 }
 
-// MARK: - Medium Widget View
+// MARK: - Medium Widget View (Interactive Log Buttons)
 
 struct CadenceWidgetMediumView: View {
     let entry: CadenceEntry
@@ -169,22 +195,35 @@ struct CadenceWidgetMediumView: View {
                     GridItem(.flexible())
                 ], spacing: 8) {
                     ForEach(entry.events.prefix(3)) { event in
-                        VStack(spacing: 4) {
-                            Text(event.emoji)
-                                .font(.title2)
-                            Text(event.name)
-                                .font(.caption2.weight(.medium))
-                                .lineLimit(1)
-                            Text(event.timeAgo)
-                                .font(.caption2)
-                                .foregroundStyle(Color(hex: event.colorHex))
+                        ZStack(alignment: .topTrailing) {
+                            Link(destination: URL(string: "cadence://event/\(event.eventID)")!) {
+                                VStack(spacing: 4) {
+                                    Text(event.emoji)
+                                        .font(.title2)
+                                    Text(event.name)
+                                        .font(.caption2.weight(.medium))
+                                        .lineLimit(1)
+                                    Text(event.timeAgo)
+                                        .font(.caption2)
+                                        .foregroundStyle(Color(hex: event.colorHex))
+                                }
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 6)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 10)
+                                        .fill(Color(hex: event.colorHex).opacity(event.urgency > 0.7 ? 0.15 : 0.07))
+                                )
+                            }
+
+                            // Interactive log button (iOS 17+)
+                            Button(intent: LogEventFromWidgetIntent(eventID: event.eventID)) {
+                                Image(systemName: "checkmark.circle.fill")
+                                    .font(.caption)
+                                    .foregroundStyle(Color(hex: event.colorHex))
+                            }
+                            .buttonStyle(.plain)
+                            .padding(4)
                         }
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 6)
-                        .background(
-                            RoundedRectangle(cornerRadius: 10)
-                                .fill(Color(hex: event.colorHex).opacity(event.urgency > 0.7 ? 0.15 : 0.07))
-                        )
                     }
                 }
             }
@@ -193,7 +232,7 @@ struct CadenceWidgetMediumView: View {
     }
 }
 
-// MARK: - Large Widget View
+// MARK: - Large Widget View (Interactive Log Buttons)
 
 struct CadenceWidgetLargeView: View {
     let entry: CadenceEntry
@@ -235,6 +274,20 @@ struct CadenceWidgetLargeView: View {
                                 .foregroundStyle(.red)
                         }
                     }
+
+                    // Interactive log button (iOS 17+)
+                    Button(intent: LogEventFromWidgetIntent(eventID: event.eventID)) {
+                        Label("Log", systemImage: "checkmark.circle.fill")
+                            .font(.caption2.weight(.medium))
+                            .foregroundStyle(.white)
+                            .padding(.horizontal, 10)
+                            .padding(.vertical, 6)
+                            .background(
+                                Capsule()
+                                    .fill(Color(hex: event.colorHex))
+                            )
+                    }
+                    .buttonStyle(.plain)
                 }
                 .padding(.vertical, 4)
 
@@ -256,21 +309,72 @@ struct CadenceWidgetLargeView: View {
     }
 }
 
-// MARK: - Widget Definition
+// MARK: - Lock Screen Circular Widget View
 
-struct CadenceWidget: Widget {
-    let kind: String = "CadenceWidget"
+struct CadenceWidgetAccessoryCircularView: View {
+    let entry: CadenceEntry
 
-    var body: some WidgetConfiguration {
-        StaticConfiguration(kind: kind, provider: CadenceTimelineProvider()) { entry in
-            CadenceWidgetEntryView(entry: entry)
-                .containerBackground(.fill.tertiary, for: .widget)
+    var body: some View {
+        if let event = entry.events.first {
+            ZStack {
+                AccessoryWidgetBackground()
+                VStack(spacing: 1) {
+                    Text(event.emoji)
+                        .font(.title3)
+                    Text(event.daysSinceLabel)
+                        .font(.caption2.weight(.bold))
+                        .foregroundStyle(event.urgency > 0.7 ? .red : .primary)
+                }
+            }
+        } else {
+            ZStack {
+                AccessoryWidgetBackground()
+                Image(systemName: "waveform.path")
+                    .font(.title3)
+            }
         }
-        .configurationDisplayName("Cadence")
-        .description("Track life's natural rhythm at a glance.")
-        .supportedFamilies([.systemSmall, .systemMedium, .systemLarge])
     }
 }
+
+// MARK: - Lock Screen Rectangular Widget View
+
+struct CadenceWidgetAccessoryRectangularView: View {
+    let entry: CadenceEntry
+
+    var body: some View {
+        if entry.events.isEmpty {
+            VStack(alignment: .leading) {
+                Text("Cadence")
+                    .font(.headline)
+                    .widgetAccentable()
+                Text("No events tracked")
+                    .font(.caption)
+            }
+        } else {
+            VStack(alignment: .leading, spacing: 4) {
+                ForEach(entry.events.prefix(2)) { event in
+                    HStack(spacing: 4) {
+                        Text(event.emoji)
+                            .font(.caption)
+                        Text(event.name)
+                            .font(.caption.weight(.medium))
+                            .lineLimit(1)
+                        Spacer()
+                        Text(event.daysSinceLabel)
+                            .font(.caption.weight(.bold))
+                        if !event.urgencyIndicator.isEmpty {
+                            Text(event.urgencyIndicator)
+                                .font(.caption2.weight(.bold))
+                                .foregroundStyle(.red)
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+// MARK: - Widget Entry View
 
 struct CadenceWidgetEntryView: View {
     @Environment(\.widgetFamily) var family
@@ -284,9 +388,35 @@ struct CadenceWidgetEntryView: View {
             CadenceWidgetMediumView(entry: entry)
         case .systemLarge:
             CadenceWidgetLargeView(entry: entry)
+        case .accessoryCircular:
+            CadenceWidgetAccessoryCircularView(entry: entry)
+        case .accessoryRectangular:
+            CadenceWidgetAccessoryRectangularView(entry: entry)
         default:
             CadenceWidgetMediumView(entry: entry)
         }
+    }
+}
+
+// MARK: - Widget Definition
+
+struct CadenceWidget: Widget {
+    let kind: String = "CadenceWidget"
+
+    var body: some WidgetConfiguration {
+        StaticConfiguration(kind: kind, provider: CadenceTimelineProvider()) { entry in
+            CadenceWidgetEntryView(entry: entry)
+                .containerBackground(.fill.tertiary, for: .widget)
+        }
+        .configurationDisplayName("Cadence")
+        .description("Track life's natural rhythm at a glance.")
+        .supportedFamilies([
+            .systemSmall,
+            .systemMedium,
+            .systemLarge,
+            .accessoryCircular,
+            .accessoryRectangular
+        ])
     }
 }
 
@@ -305,7 +435,7 @@ struct CadenceWidgetBundle: WidgetBundle {
     CadenceWidget()
 } timeline: {
     CadenceEntry(date: Date(), events: [
-        WidgetEvent(name: "Medication", emoji: "💊", daysSince: 0.5, urgency: 0.2, rhythm: "Daily", colorHex: "#5BA4A4"),
+        WidgetEvent(eventID: "preview-1", name: "Medication", emoji: "💊", daysSince: 0.5, urgency: 0.2, rhythm: "Daily", colorHex: "#5BA4A4"),
     ])
 }
 
@@ -313,8 +443,37 @@ struct CadenceWidgetBundle: WidgetBundle {
     CadenceWidget()
 } timeline: {
     CadenceEntry(date: Date(), events: [
-        WidgetEvent(name: "Medication", emoji: "💊", daysSince: 0.5, urgency: 0.2, rhythm: "Daily", colorHex: "#5BA4A4"),
-        WidgetEvent(name: "Plants", emoji: "🪴", daysSince: 2.8, urgency: 0.8, rhythm: "Every 3 days", colorHex: "#7FA886"),
-        WidgetEvent(name: "Exercise", emoji: "🏃", daysSince: 1.2, urgency: 0.4, rhythm: "Every 2 days", colorHex: "#E07A6B"),
+        WidgetEvent(eventID: "preview-1", name: "Medication", emoji: "💊", daysSince: 0.5, urgency: 0.2, rhythm: "Daily", colorHex: "#5BA4A4"),
+        WidgetEvent(eventID: "preview-2", name: "Plants", emoji: "🪴", daysSince: 2.8, urgency: 0.8, rhythm: "Every 3 days", colorHex: "#7FA886"),
+        WidgetEvent(eventID: "preview-3", name: "Exercise", emoji: "🏃", daysSince: 1.2, urgency: 0.4, rhythm: "Every 2 days", colorHex: "#E07A6B"),
+    ])
+}
+
+#Preview("Large", as: .systemLarge) {
+    CadenceWidget()
+} timeline: {
+    CadenceEntry(date: Date(), events: [
+        WidgetEvent(eventID: "preview-1", name: "Medication", emoji: "💊", daysSince: 0.5, urgency: 0.2, rhythm: "Daily", colorHex: "#5BA4A4"),
+        WidgetEvent(eventID: "preview-2", name: "Water Plants", emoji: "🪴", daysSince: 2.8, urgency: 0.8, rhythm: "Every 3 days", colorHex: "#7FA886"),
+        WidgetEvent(eventID: "preview-3", name: "Exercise", emoji: "🏃", daysSince: 1.2, urgency: 0.4, rhythm: "Every 2 days", colorHex: "#E07A6B"),
+        WidgetEvent(eventID: "preview-4", name: "Laundry", emoji: "🧺", daysSince: 5.0, urgency: 0.9, rhythm: "Weekly", colorHex: "#C4A86B"),
+        WidgetEvent(eventID: "preview-5", name: "Call Mom", emoji: "📞", daysSince: 3.0, urgency: 0.6, rhythm: "Every 5 days", colorHex: "#A07CC5"),
+    ])
+}
+
+#Preview("Lock Screen Circular", as: .accessoryCircular) {
+    CadenceWidget()
+} timeline: {
+    CadenceEntry(date: Date(), events: [
+        WidgetEvent(eventID: "preview-1", name: "Medication", emoji: "💊", daysSince: 0.5, urgency: 0.2, rhythm: "Daily", colorHex: "#5BA4A4"),
+    ])
+}
+
+#Preview("Lock Screen Rectangular", as: .accessoryRectangular) {
+    CadenceWidget()
+} timeline: {
+    CadenceEntry(date: Date(), events: [
+        WidgetEvent(eventID: "preview-1", name: "Medication", emoji: "💊", daysSince: 0.5, urgency: 0.2, rhythm: "Daily", colorHex: "#5BA4A4"),
+        WidgetEvent(eventID: "preview-2", name: "Water Plants", emoji: "🪴", daysSince: 2.8, urgency: 0.8, rhythm: "Every 3 days", colorHex: "#7FA886"),
     ])
 }

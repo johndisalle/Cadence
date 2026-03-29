@@ -143,6 +143,18 @@ struct HomeView: View {
         }
     }
 
+    // MARK: - Template Quick Add
+
+    private func createEventFromTemplate(_ template: EventTemplate) {
+        let event = Event(
+            name: template.name,
+            emoji: template.emoji,
+            accentColorHex: template.accentColorHex,
+            category: template.category
+        )
+        modelContext.insert(event)
+    }
+
     // MARK: - Empty State
 
     private var emptyState: some View {
@@ -170,6 +182,40 @@ struct HomeView: View {
                     .foregroundStyle(CadenceTheme.textSecondary)
                     .multilineTextAlignment(.center)
                     .lineSpacing(4)
+            }
+
+            // Popular Templates — quick-add pills
+            VStack(spacing: CadenceTheme.spacingSM) {
+                Text("Popular Templates")
+                    .font(.footnote.weight(.medium))
+                    .foregroundStyle(CadenceTheme.textTertiary)
+                    .textCase(.uppercase)
+
+                FlowLayout(spacing: CadenceTheme.spacingSM) {
+                    ForEach(EventTemplate.popularTemplates) { template in
+                        Button {
+                            createEventFromTemplate(template)
+                        } label: {
+                            HStack(spacing: 4) {
+                                Text(template.emoji)
+                                Text(template.name)
+                                    .font(.caption.weight(.medium))
+                                    .foregroundStyle(CadenceTheme.textPrimary)
+                            }
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 8)
+                            .background(
+                                Capsule()
+                                    .fill(Color(hex: template.accentColorHex).opacity(0.12))
+                            )
+                            .overlay(
+                                Capsule()
+                                    .strokeBorder(Color(hex: template.accentColorHex).opacity(0.3), lineWidth: 1)
+                            )
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
             }
 
             Button {

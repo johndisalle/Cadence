@@ -1,6 +1,7 @@
 import AppIntents
 import SwiftData
 import Foundation
+import WidgetKit
 
 // MARK: - Log Event Intent (Siri + Shortcuts + Widgets)
 
@@ -44,6 +45,51 @@ struct LogEventIntent: AppIntent {
         let rhythm = stats?.rhythm ?? "Keep logging!"
 
         return .result(dialog: "\(event.emoji) Logged \(event.name)! \(rhythm)")
+    }
+}
+
+// MARK: - Log Event From Widget Intent (iOS 17+ Interactive Widgets)
+
+struct LogEventFromWidgetIntent: AppIntent {
+    static var title: LocalizedStringResource = "Quick Log Event"
+    static var description: IntentDescription = "Log an event from a widget"
+    static var openAppWhenRun: Bool = false
+
+    @Parameter(title: "Event ID")
+    var eventID: String
+
+    init() {}
+
+    init(eventID: String) {
+        self.eventID = eventID
+    }
+
+    @MainActor
+    func perform() async throws -> some IntentResult {
+        let container = try ModelContainer(for: Event.self, LogEntry.self)
+        let context = container.mainContext
+
+        let descriptor = FetchDescriptor<Event>(
+            predicate: #Predicate<Event> { !$0.isArchived }
+        )
+
+        let events = try context.fetch(descriptor)
+
+        guard let event = events.first(where: { $0.id.uuidString == eventID }) else {
+            return .result()
+        }
+
+        let log = LogEntry(timestamp: Date(), event: event)
+        context.insert(log)
+        event.logs.append(log)
+        try context.save()
+
+        NotificationService.shared.scheduleSmartReminders(for: event)
+
+        // Reload widget timelines so the widget updates immediately after logging
+        WidgetCenter.shared.reloadAllTimelines()
+
+        return .result()
     }
 }
 

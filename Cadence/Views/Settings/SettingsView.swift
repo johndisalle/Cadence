@@ -106,18 +106,30 @@ struct SettingsView: View {
 
     // MARK: - Family Sharing
 
-    private var familySharingSection: some View {
-        Section {
-            Toggle("iCloud Sync", isOn: $iCloudSyncEnabled)
-                .tint(CadenceTheme.teal)
-                .listRowBackground(CadenceTheme.backgroundSecondary)
+    private var sharedEventCount: Int {
+        events.filter { $0.isShared && !$0.isArchived }.count
+    }
 
-            Text("When enabled, shared events will sync across family members' devices via iCloud. This feature requires an iCloud account.")
-                .font(.caption)
-                .foregroundStyle(CadenceTheme.textTertiary)
-                .listRowBackground(CadenceTheme.backgroundSecondary)
-        } header: {
-            Text("Family Sharing")
+    private var familySharingSection: some View {
+        Section("Family Sharing") {
+            NavigationLink {
+                FamilySharingView()
+            } label: {
+                HStack {
+                    Image(systemName: "person.2.fill")
+                        .foregroundStyle(CadenceTheme.teal)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Family Sharing")
+                            .foregroundStyle(CadenceTheme.textPrimary)
+                        Text(iCloudSyncEnabled
+                            ? "On \u{2022} \(sharedEventCount) shared event\(sharedEventCount == 1 ? "" : "s")"
+                            : "Off")
+                            .font(.caption)
+                            .foregroundStyle(CadenceTheme.textSecondary)
+                    }
+                }
+            }
+            .listRowBackground(CadenceTheme.backgroundSecondary)
         }
     }
 
