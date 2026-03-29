@@ -35,8 +35,9 @@ struct OnboardingView: View {
                 Circle()
                     .fill(CadenceTheme.teal.opacity(0.05))
                     .frame(width: 260, height: 260)
-                Text("🌊")
-                    .font(.system(size: 72))
+                Image(systemName: "water.waves")
+                    .font(.system(size: 64))
+                    .foregroundStyle(CadenceTheme.teal)
             }
 
             VStack(spacing: CadenceTheme.spacingSM) {
@@ -146,7 +147,7 @@ struct OnboardingView: View {
         } label: {
             HStack(spacing: CadenceTheme.spacingMD) {
                 Text(pack.emoji)
-                    .font(.system(size: 32))
+                    .font(.system(size: 36))
 
                 VStack(alignment: .leading, spacing: 2) {
                     Text(pack.name)
@@ -188,8 +189,9 @@ struct OnboardingView: View {
 
             if selectedTemplates.isEmpty {
                 VStack(spacing: CadenceTheme.spacingSM) {
-                    Text("🎯")
-                        .font(.system(size: 56))
+                    Image(systemName: "arrow.right.circle.fill")
+                        .font(.system(size: 48))
+                        .foregroundStyle(CadenceTheme.teal)
                     Text("Starting fresh!")
                         .font(.title2.weight(.semibold))
                         .foregroundStyle(CadenceTheme.textPrimary)
