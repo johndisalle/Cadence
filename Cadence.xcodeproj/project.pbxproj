@@ -1,0 +1,606 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		A10000001 /* CadenceApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000001; };
+		A10000002 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000002; };
+		A10000003 /* Color+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000003; };
+		A10000004 /* Date+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000004; };
+		A10000005 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000005; };
+		A10000006 /* LogEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000006; };
+		A10000007 /* InsightsEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000007; };
+		A10000008 /* IntervalEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000008; };
+		A10000009 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000009; };
+		A10000010 /* PDFExportService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000010; };
+		A10000011 /* SampleData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000011; };
+		A10000012 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000012; };
+		A10000013 /* EmptyStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000013; };
+		A10000014 /* LogButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000014; };
+		A10000015 /* EditEventView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000015; };
+		A10000016 /* EventDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000016; };
+		A10000017 /* IntervalChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000017; };
+		A10000018 /* AddEventView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000018; };
+		A10000019 /* EventCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000019; };
+		A10000020 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000020; };
+		A10000021 /* InsightsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000021; };
+		A10000022 /* PulseRingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000022; };
+		A10000023 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000023; };
+		A10000024 /* CadenceIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000024; };
+		A10000025 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B10000025; };
+		A10000030 /* CadenceWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000030; };
+		A10000031 /* WidgetExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = C20000001; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		D10000001 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E10000001;
+			proxyType = 1;
+			remoteGlobalIDString = C10000002;
+			remoteInfo = CadenceWidgetExtension;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		F10000001 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				A10000031 /* WidgetExtension.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		B10000001 /* CadenceApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CadenceApp.swift; sourceTree = "<group>"; };
+		B10000002 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		B10000003 /* Color+Hex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Hex.swift"; sourceTree = "<group>"; };
+		B10000004 /* Date+Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Helpers.swift"; sourceTree = "<group>"; };
+		B10000005 /* Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
+		B10000006 /* LogEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogEntry.swift; sourceTree = "<group>"; };
+		B10000007 /* InsightsEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsightsEngine.swift; sourceTree = "<group>"; };
+		B10000008 /* IntervalEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntervalEngine.swift; sourceTree = "<group>"; };
+		B10000009 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
+		B10000010 /* PDFExportService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFExportService.swift; sourceTree = "<group>"; };
+		B10000011 /* SampleData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleData.swift; sourceTree = "<group>"; };
+		B10000012 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		B10000013 /* EmptyStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyStateView.swift; sourceTree = "<group>"; };
+		B10000014 /* LogButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogButton.swift; sourceTree = "<group>"; };
+		B10000015 /* EditEventView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditEventView.swift; sourceTree = "<group>"; };
+		B10000016 /* EventDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDetailView.swift; sourceTree = "<group>"; };
+		B10000017 /* IntervalChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntervalChartView.swift; sourceTree = "<group>"; };
+		B10000018 /* AddEventView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEventView.swift; sourceTree = "<group>"; };
+		B10000019 /* EventCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventCardView.swift; sourceTree = "<group>"; };
+		B10000020 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		B10000021 /* InsightsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsightsView.swift; sourceTree = "<group>"; };
+		B10000022 /* PulseRingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PulseRingView.swift; sourceTree = "<group>"; };
+		B10000023 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		B10000024 /* CadenceIntents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CadenceIntents.swift; sourceTree = "<group>"; };
+		B10000025 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		B10000026 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B10000027 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		B10000030 /* CadenceWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CadenceWidget.swift; sourceTree = "<group>"; };
+		C10000001 /* Cadence.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Cadence.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C20000001 /* CadenceWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = CadenceWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		F20000001 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F20000002 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		G10000001 = {
+			isa = PBXGroup;
+			children = (
+				G10000002 /* Cadence */,
+				G10000010 /* CadenceWidget */,
+				G10000011 /* CadenceIntents */,
+				G10000020 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		G10000002 /* Cadence */ = {
+			isa = PBXGroup;
+			children = (
+				G10000003 /* App */,
+				G10000004 /* Models */,
+				G10000005 /* Services */,
+				G10000006 /* Views */,
+				G10000009 /* Extensions */,
+				G10000008 /* Utilities */,
+				B10000025 /* Assets.xcassets */,
+				B10000026 /* Info.plist */,
+				G10000030 /* Preview Content */,
+			);
+			path = Cadence;
+			sourceTree = "<group>";
+		};
+		G10000003 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				B10000001 /* CadenceApp.swift */,
+				B10000002 /* ContentView.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		G10000004 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				B10000005 /* Event.swift */,
+				B10000006 /* LogEntry.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		G10000005 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				B10000007 /* InsightsEngine.swift */,
+				B10000008 /* IntervalEngine.swift */,
+				B10000009 /* NotificationService.swift */,
+				B10000010 /* PDFExportService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		G10000006 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				G10000060 /* Home */,
+				G10000061 /* Detail */,
+				G10000062 /* Insights */,
+				G10000063 /* Settings */,
+				G10000064 /* Components */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		G10000060 /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				B10000020 /* HomeView.swift */,
+				B10000019 /* EventCardView.swift */,
+				B10000018 /* AddEventView.swift */,
+			);
+			path = Home;
+			sourceTree = "<group>";
+		};
+		G10000061 /* Detail */ = {
+			isa = PBXGroup;
+			children = (
+				B10000016 /* EventDetailView.swift */,
+				B10000015 /* EditEventView.swift */,
+				B10000017 /* IntervalChartView.swift */,
+			);
+			path = Detail;
+			sourceTree = "<group>";
+		};
+		G10000062 /* Insights */ = {
+			isa = PBXGroup;
+			children = (
+				B10000021 /* InsightsView.swift */,
+				B10000022 /* PulseRingView.swift */,
+			);
+			path = Insights;
+			sourceTree = "<group>";
+		};
+		G10000063 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				B10000023 /* SettingsView.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		G10000064 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				B10000013 /* EmptyStateView.swift */,
+				B10000014 /* LogButton.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		G10000008 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				B10000011 /* SampleData.swift */,
+				B10000012 /* Theme.swift */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		G10000009 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				B10000003 /* Color+Hex.swift */,
+				B10000004 /* Date+Helpers.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		G10000010 /* CadenceWidget */ = {
+			isa = PBXGroup;
+			children = (
+				B10000030 /* CadenceWidget.swift */,
+			);
+			path = CadenceWidget;
+			sourceTree = "<group>";
+		};
+		G10000011 /* CadenceIntents */ = {
+			isa = PBXGroup;
+			children = (
+				B10000024 /* CadenceIntents.swift */,
+			);
+			path = CadenceIntents;
+			sourceTree = "<group>";
+		};
+		G10000020 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C10000001 /* Cadence.app */,
+				C20000001 /* CadenceWidgetExtension.appex */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		G10000030 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				B10000027 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		C10000001A /* Cadence */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = X10000001;
+			buildPhases = (
+				S10000001 /* Sources */,
+				F20000001 /* Frameworks */,
+				R10000001 /* Resources */,
+				F10000001 /* Embed App Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D10000002 /* PBXTargetDependency */,
+			);
+			name = Cadence;
+			productName = Cadence;
+			productReference = C10000001 /* Cadence.app */;
+			productType = "com.apple.product-type.application";
+		};
+		C10000002 /* CadenceWidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = X10000002;
+			buildPhases = (
+				S10000002 /* Sources */,
+				F20000002 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CadenceWidgetExtension;
+			productName = CadenceWidgetExtension;
+			productReference = C20000001 /* CadenceWidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		E10000001 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					C10000001A = {
+						CreatedOnToolsVersion = 15.0;
+					};
+					C10000002 = {
+						CreatedOnToolsVersion = 15.0;
+					};
+				};
+			};
+			buildConfigurationList = X10000003;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = G10000001;
+			productRefGroup = G10000020 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				C10000001A /* Cadence */,
+				C10000002 /* CadenceWidgetExtension */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		R10000001 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A10000025 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		S10000001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A10000001 /* CadenceApp.swift in Sources */,
+				A10000002 /* ContentView.swift in Sources */,
+				A10000003 /* Color+Hex.swift in Sources */,
+				A10000004 /* Date+Helpers.swift in Sources */,
+				A10000005 /* Event.swift in Sources */,
+				A10000006 /* LogEntry.swift in Sources */,
+				A10000007 /* InsightsEngine.swift in Sources */,
+				A10000008 /* IntervalEngine.swift in Sources */,
+				A10000009 /* NotificationService.swift in Sources */,
+				A10000010 /* PDFExportService.swift in Sources */,
+				A10000011 /* SampleData.swift in Sources */,
+				A10000012 /* Theme.swift in Sources */,
+				A10000013 /* EmptyStateView.swift in Sources */,
+				A10000014 /* LogButton.swift in Sources */,
+				A10000015 /* EditEventView.swift in Sources */,
+				A10000016 /* EventDetailView.swift in Sources */,
+				A10000017 /* IntervalChartView.swift in Sources */,
+				A10000018 /* AddEventView.swift in Sources */,
+				A10000019 /* EventCardView.swift in Sources */,
+				A10000020 /* HomeView.swift in Sources */,
+				A10000021 /* InsightsView.swift in Sources */,
+				A10000022 /* PulseRingView.swift in Sources */,
+				A10000023 /* SettingsView.swift in Sources */,
+				A10000024 /* CadenceIntents.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		S10000002 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A10000030 /* CadenceWidget.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		D10000002 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C10000002 /* CadenceWidgetExtension */;
+			targetProxy = D10000001 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		Y10000001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		Y10000002 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		Y10000003 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Cadence/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Cadence/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Cadence;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.cadence.app;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		Y10000004 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Cadence/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Cadence/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Cadence;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.cadence.app;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		Y10000005 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = CadenceWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.cadence.app.widget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		Y10000006 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = CadenceWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.cadence.app.widget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		X10000001 /* Build configuration list for PBXNativeTarget "Cadence" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				Y10000003 /* Debug */,
+				Y10000004 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		X10000002 /* Build configuration list for PBXNativeTarget "CadenceWidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				Y10000005 /* Debug */,
+				Y10000006 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		X10000003 /* Build configuration list for PBXProject "Cadence" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				Y10000001 /* Debug */,
+				Y10000002 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+	};
+	rootObject = E10000001 /* Project object */;
+}
