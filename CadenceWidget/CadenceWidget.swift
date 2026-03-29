@@ -155,8 +155,9 @@ struct CadenceWidgetSmallView: View {
 
             if let event = entry.events.first {
                 Spacer()
-                Text(event.emoji)
-                    .font(.system(size: 32))
+                Image(systemName: event.emoji)
+                    .font(.system(size: 28))
+                    .foregroundStyle(event.color)
                 Text(event.name)
                     .font(.subheadline.weight(.semibold))
                     .lineLimit(1)
@@ -217,8 +218,9 @@ struct CadenceWidgetMediumView: View {
                     ForEach(entry.events.prefix(3)) { event in
                         Link(destination: URL(string: "cadence://event/\(event.eventID)")!) {
                             VStack(spacing: 4) {
-                                Text(event.emoji)
+                                Image(systemName: event.emoji)
                                     .font(.title2)
+                                    .foregroundStyle(event.color)
                                 Text(event.name)
                                     .font(.caption2.weight(.medium))
                                     .lineLimit(1)
@@ -259,8 +261,9 @@ struct CadenceWidgetLargeView: View {
 
             ForEach(entry.events.prefix(6)) { event in
                 HStack(spacing: 12) {
-                    Text(event.emoji)
+                    Image(systemName: event.emoji)
                         .font(.title3)
+                        .foregroundStyle(event.color)
                         .frame(width: 36)
 
                     VStack(alignment: .leading, spacing: 2) {
@@ -314,7 +317,7 @@ struct CadenceWidgetAccessoryCircularView: View {
             ZStack {
                 AccessoryWidgetBackground()
                 VStack(spacing: 1) {
-                    Text(event.emoji)
+                    Image(systemName: event.emoji)
                         .font(.title3)
                     Text(event.daysSinceLabel)
                         .font(.caption2.weight(.bold))
@@ -349,7 +352,7 @@ struct CadenceWidgetAccessoryRectangularView: View {
             VStack(alignment: .leading, spacing: 4) {
                 ForEach(entry.events.prefix(2)) { event in
                     HStack(spacing: 4) {
-                        Text(event.emoji)
+                        Image(systemName: event.emoji)
                             .font(.caption)
                         Text(event.name)
                             .font(.caption.weight(.medium))
