@@ -5,6 +5,11 @@ struct EventCardView: View {
     let event: Event
     @Environment(\.modelContext) private var modelContext
 
+    @State private var showToast = false
+    @State private var toastMessage = ""
+    @State private var logBounceScale: CGFloat = 1.0
+    @State private var lastLogEntry: LogEntry?
+
     private var stats: IntervalStats? {
         IntervalEngine.compute(for: event)
     }
@@ -77,6 +82,18 @@ struct EventCardView: View {
 
             // Badges
             HStack(spacing: CadenceTheme.spacingXS) {
+                if let streak = StreakEngine.compute(for: event), streak.currentStreak >= 3 {
+                    HStack(spacing: 2) {
+                        Image(systemName: "flame.fill")
+                            .font(.caption2)
+                        Text("\(streak.currentStreak)")
+                            .font(.caption2.weight(.bold))
+                    }
+                    .foregroundStyle(.white)
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 3)
+                    .background(Capsule().fill(CadenceTheme.coral))
+                }
                 if isOverdue {
                     badgeView(text: "Overdue", color: CadenceTheme.urgencyHigh)
                 }
@@ -92,6 +109,10 @@ struct EventCardView: View {
                 .opacity(0.8)
         }
         .cadenceCard(accent: event.accentColor)
+        .scaleEffect(logBounceScale)
+        .toast(isShowing: $showToast, message: toastMessage, icon: "checkmark.circle.fill") {
+            undoLastLog()
+        }
     }
 
     // MARK: - Badge
@@ -109,10 +130,33 @@ struct EventCardView: View {
 
     private func logNow() {
         let entry = LogEntry(timestamp: Date(), event: event)
+        event.logs.append(entry)
         modelContext.insert(entry)
+        lastLogEntry = entry
+
+        // Success bounce animation
+        withAnimation(.spring(response: 0.3, dampingFraction: 0.5)) {
+            logBounceScale = 1.08
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
+                logBounceScale = 1.0
+            }
+        }
+
+        // Show toast
+        toastMessage = "Logged \(event.name)!"
+        showToast = true
 
         let generator = UIImpactFeedbackGenerator(style: .medium)
         generator.impactOccurred()
+    }
+
+    private func undoLastLog() {
+        guard let log = lastLogEntry else { return }
+        event.logs.removeAll { $0.id == log.id }
+        modelContext.delete(log)
+        lastLogEntry = nil
     }
 }
 

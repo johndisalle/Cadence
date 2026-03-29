@@ -32,6 +32,10 @@ struct RootView: View {
     @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
     @AppStorage("appearanceMode") private var appearanceMode: String = "system"
 
+    @State private var selectedEventID: UUID?
+    @State private var showAddEvent = false
+    @State private var showQuickLog = false
+
     private var colorScheme: ColorScheme? {
         switch appearanceMode {
         case "light": return .light
@@ -43,11 +47,34 @@ struct RootView: View {
     var body: some View {
         Group {
             if hasCompletedOnboarding {
-                ContentView()
+                ContentView(
+                    selectedEventID: $selectedEventID,
+                    showAddEvent: $showAddEvent,
+                    showQuickLog: $showQuickLog
+                )
             } else {
                 OnboardingView()
             }
         }
         .preferredColorScheme(colorScheme)
+        .onOpenURL { url in
+            handleDeepLink(url: url)
+        }
+    }
+
+    private func handleDeepLink(url: URL) {
+        guard let destination = DeepLinkRouter.parse(url: url) else { return }
+        navigate(to: destination)
+    }
+
+    private func navigate(to destination: DeepLinkDestination) {
+        switch destination {
+        case .event(let id):
+            selectedEventID = id
+        case .addEvent:
+            showAddEvent = true
+        case .quickLog:
+            showQuickLog = true
+        }
     }
 }

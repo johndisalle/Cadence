@@ -20,6 +20,15 @@ struct EventDetailView: View {
     @State private var selectedPhotoData: Data?
     @State private var selectedPhotoItem: PhotosPickerItem?
 
+    // Celebration state
+    @State private var showConfetti = false
+    @State private var showSuccessBurst = false
+    @State private var showToast = false
+    @State private var toastMessage = ""
+    @State private var milestoneToShow: Milestone?
+    @State private var showMilestoneAlert = false
+    @State private var lastLogEntry: LogEntry?
+
     private var stats: IntervalStats? {
         IntervalEngine.compute(for: event)
     }
@@ -76,6 +85,23 @@ struct EventDetailView: View {
         .sheet(isPresented: $showPhotoLogSheet) {
             logWithPhotoSheet
         }
+        .overlay {
+            ConfettiView(isShowing: $showConfetti)
+        }
+        .overlay {
+            SuccessBurstView(isShowing: $showSuccessBurst)
+        }
+        .toast(isShowing: $showToast, message: toastMessage, icon: "checkmark.circle.fill") {
+            undoLastLog()
+        }
+        .alert(
+            milestoneToShow?.title ?? "",
+            isPresented: $showMilestoneAlert
+        ) {
+            Button("Awesome!") { }
+        } message: {
+            Text(milestoneToShow?.subtitle ?? "")
+        }
     }
 
     // MARK: - Overview Tab
@@ -125,6 +151,10 @@ struct EventDetailView: View {
 
     // MARK: - Stats Card
 
+    private var streakInfo: StreakInfo? {
+        StreakEngine.compute(for: event)
+    }
+
     private var statsCard: some View {
         VStack(spacing: CadenceTheme.spacingSM) {
             let logCount = event.logs.count
@@ -141,6 +171,26 @@ struct EventDetailView: View {
                 statItem(value: "\(logCount)", label: "Logs")
                 statItem(value: avgText == "..." ? "--" : "~\(avgText)d", label: "Avg Interval")
                 statItem(value: lastText, label: "Last")
+            }
+
+            // Streak row
+            if let streak = streakInfo, streak.currentStreak > 0 {
+                Divider()
+                HStack(spacing: CadenceTheme.spacingMD) {
+                    HStack(spacing: 4) {
+                        Image(systemName: "flame.fill")
+                            .foregroundStyle(CadenceTheme.coral)
+                        Text("\(streak.currentStreak)-day streak")
+                            .font(.subheadline.weight(.semibold))
+                            .foregroundStyle(CadenceTheme.textPrimary)
+                    }
+
+                    Spacer()
+
+                    Text("Longest: \(streak.longestStreak)")
+                        .font(.caption)
+                        .foregroundStyle(CadenceTheme.textSecondary)
+                }
             }
         }
         .cadenceCard(accent: event.accentColor)
@@ -310,9 +360,34 @@ struct EventDetailView: View {
         event.logs.append(log)
         modelContext.insert(log)
 
+        // Check milestone
+        if let milestone = MilestoneEngine.check(event: event, newLogCount: event.logs.count) {
+            milestoneToShow = milestone
+            if milestone.isConfetti {
+                showConfetti = true
+            } else {
+                showSuccessBurst = true
+            }
+            showMilestoneAlert = true
+        } else {
+            showSuccessBurst = true
+        }
+
+        // Show toast
+        toastMessage = "Logged \(event.name)!"
+        showToast = true
+        lastLogEntry = log  // for undo
+
         // Haptic feedback
         let generator = UIImpactFeedbackGenerator(style: .medium)
         generator.impactOccurred()
+    }
+
+    private func undoLastLog() {
+        guard let log = lastLogEntry else { return }
+        event.logs.removeAll { $0.id == log.id }
+        modelContext.delete(log)
+        lastLogEntry = nil
     }
 
     // MARK: - Log with Note Sheet

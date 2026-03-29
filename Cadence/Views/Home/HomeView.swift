@@ -17,6 +17,9 @@ struct HomeView: View {
     @State private var showAsGrid = true
     @State private var sortMode: HomeSortMode = .dueSoonest
     @State private var showPaywall = false
+    @State private var deepLinkEvent: Event?
+
+    var selectedEventID: Binding<UUID?>?
 
     private var premium: PremiumManager { .shared }
 
@@ -90,6 +93,16 @@ struct HomeView: View {
             }
             .sheet(isPresented: $showPaywall) {
                 PaywallView()
+            }
+            .navigationDestination(item: $deepLinkEvent) { event in
+                EventDetailView(event: event)
+            }
+            .onChange(of: selectedEventID?.wrappedValue) { _, newValue in
+                guard let id = newValue else { return }
+                if let event = events.first(where: { $0.id == id }) {
+                    deepLinkEvent = event
+                }
+                selectedEventID?.wrappedValue = nil
             }
         }
     }

@@ -28,6 +28,36 @@
 	<string>Cadence lets you attach photos to your activity logs.</string>
 	<key>NSUserNotificationsUsageDescription</key>
 	<string>Cadence sends gentle reminders when activities are due.</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>cadence</string>
+			</array>
+			<key>CFBundleURLName</key>
+			<string>com.cadence.app</string>
+		</dict>
+	</array>
+	<key>UIApplicationShortcutItems</key>
+	<array>
+		<dict>
+			<key>UIApplicationShortcutItemType</key>
+			<string>com.cadence.app.addEvent</string>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>New Event</string>
+			<key>UIApplicationShortcutItemIconType</key>
+			<string>UIApplicationShortcutIconTypeAdd</string>
+		</dict>
+		<dict>
+			<key>UIApplicationShortcutItemType</key>
+			<string>com.cadence.app.quickLog</string>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>Quick Log</string>
+			<key>UIApplicationShortcutItemIconType</key>
+			<string>UIApplicationShortcutIconTypeTask</string>
+		</dict>
+	</array>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
