@@ -336,14 +336,16 @@ struct SettingsView: View {
         SampleData.populate(context: modelContext)
     }
 
+    @MainActor
     private func resetAllData() {
-        do {
-            try modelContext.delete(model: LogEntry.self)
-            try modelContext.delete(model: Event.self)
-            try modelContext.save()
-        } catch {
-            print("Failed to reset data: \(error)")
+        // Delete all logs first, then events
+        for event in events {
+            for log in event.logs {
+                modelContext.delete(log)
+            }
+            modelContext.delete(event)
         }
+        try? modelContext.save()
     }
 }
 
