@@ -9,6 +9,8 @@ struct EventCardView: View {
     @State private var toastMessage = ""
     @State private var logBounceScale: CGFloat = 1.0
     @State private var lastLogEntry: LogEntry?
+    @State private var showLogSuccess = false
+    @State private var logPulse = false
 
     private var stats: IntervalStats? {
         IntervalEngine.compute(for: event)
@@ -31,6 +33,10 @@ struct EventCardView: View {
         return Calendar.current.isDateInToday(next)
     }
 
+    private var trend: TrendDirection {
+        IntervalEngine.trend(for: event)
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: CadenceTheme.spacingSM) {
             // Top row: emoji + quick log
@@ -38,6 +44,11 @@ struct EventCardView: View {
                 Image(systemName: event.emoji)
                     .font(.system(size: 34))
                     .foregroundStyle(event.accentColor)
+                    .background(
+                        Circle()
+                            .fill(event.accentColor.opacity(0.10))
+                            .frame(width: 50, height: 50)
+                    )
 
                 Spacer()
 
@@ -55,27 +66,37 @@ struct EventCardView: View {
 
             // Event name
             Text(event.name)
-                .font(.headline)
+                .font(.headline.weight(.semibold))
                 .foregroundStyle(CadenceTheme.textPrimary)
                 .lineLimit(2)
                 .minimumScaleFactor(0.85)
 
-            // Last done
+            // Live-updating "time since"
             if let lastDate = event.lastLoggedDate {
-                Text("Last done \(lastDate.timeAgoDisplay.lowercased())")
-                    .font(.caption)
-                    .foregroundStyle(CadenceTheme.textSecondary)
+                TimelineView(.periodic(from: .now, by: 60)) { _ in
+                    Text(lastDate.liveDurationDisplay)
+                        .font(.subheadline.weight(.medium))
+                        .foregroundStyle(CadenceTheme.textSecondary)
+                }
             } else {
                 Text("Never logged")
-                    .font(.caption)
+                    .font(.subheadline)
                     .foregroundStyle(CadenceTheme.textTertiary)
             }
 
-            // Rhythm
+            // Rhythm + trend arrow
             if let rhythm = stats?.rhythm {
-                Text(rhythm)
-                    .font(.caption2.weight(.medium))
-                    .foregroundStyle(CadenceTheme.textSecondary)
+                HStack(spacing: 4) {
+                    Text(rhythm)
+                        .font(.caption2.weight(.medium))
+                        .foregroundStyle(CadenceTheme.textSecondary)
+
+                    if trend != .steady {
+                        Image(systemName: trend.icon)
+                            .font(.caption2.weight(.bold))
+                            .foregroundStyle(Color(hex: trend.colorHex))
+                    }
+                }
             }
 
             Spacer(minLength: 0)
@@ -108,7 +129,31 @@ struct EventCardView: View {
                 .frame(height: 4)
                 .opacity(0.8)
         }
-        .cadenceCard(accent: event.accentColor)
+        .padding(CadenceTheme.cardPadding)
+        .background(
+            RoundedRectangle(cornerRadius: CadenceTheme.cardCornerRadius)
+                .fill(
+                    LinearGradient(
+                        colors: [
+                            event.accentColor.opacity(logPulse ? 0.20 : 0.06),
+                            event.accentColor.opacity(logPulse ? 0.30 : 0.15)
+                        ],
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                )
+                .shadow(color: .black.opacity(0.06), radius: CadenceTheme.cardShadowRadius, y: 4)
+        )
+        .overlay(
+            Group {
+                if showLogSuccess {
+                    Image(systemName: "checkmark.circle.fill")
+                        .font(.system(size: 54, weight: .bold))
+                        .foregroundStyle(event.accentColor)
+                        .transition(.scale.combined(with: .opacity))
+                }
+            }
+        )
         .scaleEffect(logBounceScale)
         .toast(isShowing: $showToast, message: toastMessage, icon: "checkmark.circle.fill") {
             undoLastLog()
@@ -141,6 +186,26 @@ struct EventCardView: View {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
             withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
                 logBounceScale = 1.0
+            }
+        }
+
+        // Checkmark overlay
+        withAnimation(.easeOut(duration: 0.3)) {
+            showLogSuccess = true
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
+            withAnimation(.easeIn(duration: 0.3)) {
+                showLogSuccess = false
+            }
+        }
+
+        // Color pulse
+        withAnimation(.easeOut(duration: 0.25)) {
+            logPulse = true
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+            withAnimation(.easeInOut(duration: 0.35)) {
+                logPulse = false
             }
         }
 

@@ -45,15 +45,21 @@ struct OnboardingView: View {
                     .font(.largeTitle.weight(.bold))
                     .foregroundStyle(CadenceTheme.textPrimary)
 
-                Text("Track life's natural rhythm")
+                Text("Remember everything. Stress about nothing.")
                     .font(.title3)
                     .foregroundStyle(CadenceTheme.textSecondary)
             }
 
-            Text("No accounts. No cloud. Just you.")
+            Text("100% private. No accounts. No cloud. Just you and your rhythm.")
                 .font(.footnote)
                 .foregroundStyle(CadenceTheme.textTertiary)
                 .padding(.top, CadenceTheme.spacingXS)
+
+            Text("Plants die. Oil changes get forgotten. Haircuts get pushed back. Cadence keeps track so you don't have to.")
+                .font(.footnote)
+                .foregroundStyle(CadenceTheme.textTertiary)
+                .multilineTextAlignment(.center)
+                .lineSpacing(4)
 
             Spacer()
 
@@ -190,26 +196,26 @@ struct OnboardingView: View {
 
             if selectedTemplates.isEmpty {
                 VStack(spacing: CadenceTheme.spacingSM) {
-                    Image(systemName: "arrow.right.circle.fill")
+                    Image(systemName: "waveform.path.ecg")
                         .font(.system(size: 48))
                         .foregroundStyle(CadenceTheme.teal)
-                    Text("Starting fresh!")
+                    Text("Your rhythm starts now")
                         .font(.title2.weight(.semibold))
                         .foregroundStyle(CadenceTheme.textPrimary)
-                    Text("You can always add events later\nfrom the + button.")
+                    Text("The best time to start tracking was yesterday.\nThe second best time is right now.")
                         .font(.subheadline)
                         .foregroundStyle(CadenceTheme.textSecondary)
                         .multilineTextAlignment(.center)
                 }
             } else {
                 VStack(spacing: CadenceTheme.spacingMD) {
-                    Text("\(selectedTemplates.count) events ready to track!")
+                    Text("\(selectedTemplates.count) rhythms, ready to flow")
                         .font(.title2.weight(.semibold))
                         .foregroundStyle(CadenceTheme.textPrimary)
 
                     selectedEventsFlow
 
-                    Text("Tip: Log something now to see Cadence in action")
+                    Text("Tip: Log your first event right away — it feels great.")
                         .font(.footnote)
                         .foregroundStyle(CadenceTheme.textSecondary)
                         .padding(.top, CadenceTheme.spacingSM)

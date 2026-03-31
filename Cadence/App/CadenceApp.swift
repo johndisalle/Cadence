@@ -33,6 +33,7 @@ struct RootView: View {
     @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
     @AppStorage("appearanceMode") private var appearanceMode: String = "system"
 
+    @State private var showLaunchScreen = true
     @State private var selectedEventID: UUID?
     @State private var showAddEvent = false
     @State private var showQuickLog = false
@@ -46,18 +47,33 @@ struct RootView: View {
     }
 
     var body: some View {
-        Group {
-            if hasCompletedOnboarding {
-                ContentView(
-                    selectedEventID: $selectedEventID,
-                    showAddEvent: $showAddEvent,
-                    showQuickLog: $showQuickLog
-                )
-            } else {
-                OnboardingView()
+        ZStack {
+            Group {
+                if hasCompletedOnboarding {
+                    ContentView(
+                        selectedEventID: $selectedEventID,
+                        showAddEvent: $showAddEvent,
+                        showQuickLog: $showQuickLog
+                    )
+                } else {
+                    OnboardingView()
+                }
+            }
+            .preferredColorScheme(colorScheme)
+
+            if showLaunchScreen {
+                LaunchScreenView()
+                    .transition(.opacity)
+                    .zIndex(1)
             }
         }
-        .preferredColorScheme(colorScheme)
+        .onAppear {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) {
+                withAnimation(.easeOut(duration: 0.4)) {
+                    showLaunchScreen = false
+                }
+            }
+        }
         .onOpenURL { url in
             handleDeepLink(url: url)
         }

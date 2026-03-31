@@ -45,4 +45,18 @@ extension Date {
     func daysUntil(_ other: Date) -> Double {
         other.timeIntervalSince(self) / 86400.0
     }
+
+    var liveDurationDisplay: String {
+        let interval = Date().timeIntervalSince(self)
+        let minutes = Int(interval) / 60
+        let hours = minutes / 60
+        let days = hours / 24
+
+        if minutes < 1 { return "just now" }
+        if minutes < 60 { return "\(minutes)m ago" }
+        if hours < 24 { return "\(hours)h \(minutes % 60)m ago" }
+        if days < 7 { return "\(days)d \(hours % 24)h ago" }
+        if days < 30 { return "\(days / 7)w \(days % 7)d ago" }
+        return "\(days / 30)mo ago"
+    }
 }

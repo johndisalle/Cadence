@@ -1,5 +1,27 @@
 import Foundation
 
+enum TrendDirection {
+    case improving  // intervals getting shorter (more consistent)
+    case declining  // intervals getting longer
+    case steady
+
+    var icon: String {
+        switch self {
+        case .improving: return "arrow.down.right"
+        case .declining: return "arrow.up.right"
+        case .steady: return "equal"
+        }
+    }
+
+    var colorHex: String {
+        switch self {
+        case .improving: return "#7FA886"
+        case .declining: return "#E07A6B"
+        case .steady: return "#6B7B8D"
+        }
+    }
+}
+
 struct IntervalStats {
     let averageDays: Double
     let medianDays: Double
@@ -174,6 +196,21 @@ struct IntervalEngine {
         return zip(sorted.dropFirst(), sorted).map { later, earlier in
             later.timestamp.timeIntervalSince(earlier.timestamp) / 86400.0
         }
+    }
+
+    static func trend(for event: Event) -> TrendDirection {
+        let intervals = self.intervals(for: event)
+        guard intervals.count >= 4 else { return .steady }
+
+        let recent = intervals.suffix(3)
+        let recentAvg = recent.reduce(0, +) / Double(recent.count)
+        let overallAvg = intervals.reduce(0, +) / Double(intervals.count)
+
+        guard overallAvg > 0 else { return .steady }
+        let ratio = recentAvg / overallAvg
+        if ratio < 0.85 { return .improving }
+        if ratio > 1.15 { return .declining }
+        return .steady
     }
 
     static func dueSoonestScore(for event: Event) -> Double {
