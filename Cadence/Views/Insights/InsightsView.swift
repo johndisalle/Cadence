@@ -247,7 +247,7 @@ struct InsightsView: View {
         .cadenceCard()
     }
 
-    private func trendColor(for trend: TrendDirection) -> Color {
+    private func trendColor(for trend: WeeklyTrend) -> Color {
         switch trend {
         case .up: return CadenceTheme.sage
         case .down: return CadenceTheme.coral

@@ -12,11 +12,11 @@ struct EventSummary {
     let emoji: String
     let logsThisWeek: Int
     let logsLastWeek: Int
-    let trend: TrendDirection
+    let trend: WeeklyTrend
     let onTrack: Bool
 }
 
-enum TrendDirection {
+enum WeeklyTrend {
     case up, down, steady
 
     var icon: String {
@@ -61,7 +61,7 @@ struct InsightsEngine {
 
             if onTrack { onTrackCount += 1 }
 
-            let trend: TrendDirection
+            let trend: WeeklyTrend
             if thisWeek.count > lastWeek.count {
                 trend = .up
             } else if thisWeek.count < lastWeek.count {
