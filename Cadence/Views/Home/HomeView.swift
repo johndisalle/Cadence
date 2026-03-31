@@ -17,7 +17,7 @@ struct HomeView: View {
     @State private var showAsGrid = true
     @State private var sortMode: HomeSortMode = .dueSoonest
     @State private var showPaywall = false
-    @State private var deepLinkEvent: Event?
+    @State private var navigationPath = NavigationPath()
 
     var selectedEventID: Binding<UUID?>?
 
@@ -43,7 +43,7 @@ struct HomeView: View {
     ]
 
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $navigationPath) {
             Group {
                 if events.isEmpty {
                     emptyState
@@ -94,13 +94,13 @@ struct HomeView: View {
             .sheet(isPresented: $showPaywall) {
                 PaywallView()
             }
-            .navigationDestination(item: $deepLinkEvent) { event in
+            .navigationDestination(for: Event.self) { event in
                 EventDetailView(event: event)
             }
             .onChange(of: selectedEventID?.wrappedValue) { _, newValue in
                 guard let id = newValue else { return }
                 if let event = events.first(where: { $0.id == id }) {
-                    deepLinkEvent = event
+                    navigationPath.append(event)
                 }
                 selectedEventID?.wrappedValue = nil
             }
@@ -121,9 +121,6 @@ struct HomeView: View {
         .padding(.horizontal, CadenceTheme.spacingMD)
         .padding(.top, CadenceTheme.spacingSM)
         .padding(.bottom, CadenceTheme.spacingXL)
-        .navigationDestination(for: Event.self) { event in
-            EventDetailView(event: event)
-        }
     }
 
     // MARK: - List
@@ -140,8 +137,6 @@ struct HomeView: View {
         .padding(.horizontal, CadenceTheme.spacingMD)
         .padding(.top, CadenceTheme.spacingSM)
         .padding(.bottom, CadenceTheme.spacingXL)
-        .navigationDestination(for: Event.self) { event in
-            EventDetailView(event: event)
         }
     }
 
