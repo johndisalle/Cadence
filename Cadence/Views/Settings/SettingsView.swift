@@ -160,17 +160,18 @@ struct SettingsView: View {
                 NavigationLink {
                     FamilySharingView()
                 } label: {
-                HStack {
-                    Image(systemName: "person.2.fill")
-                        .foregroundStyle(CadenceTheme.teal)
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text("Family Sharing")
-                            .foregroundStyle(CadenceTheme.textPrimary)
-                        Text(iCloudSyncEnabled
-                            ? "On \u{2022} \(sharedEventCount) shared event\(sharedEventCount == 1 ? "" : "s")"
-                            : "Off")
-                            .font(.caption)
-                            .foregroundStyle(CadenceTheme.textSecondary)
+                    HStack {
+                        Image(systemName: "person.2.fill")
+                            .foregroundStyle(CadenceTheme.teal)
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("Family Sharing")
+                                .foregroundStyle(CadenceTheme.textPrimary)
+                            Text(iCloudSyncEnabled
+                                ? "On \u{2022} \(sharedEventCount) shared event\(sharedEventCount == 1 ? "" : "s")"
+                                : "Off")
+                                .font(.caption)
+                                .foregroundStyle(CadenceTheme.textSecondary)
+                        }
                     }
                 }
             } else {
@@ -194,7 +195,6 @@ struct SettingsView: View {
                     }
                 }
             }
-            .listRowBackground(CadenceTheme.backgroundSecondary)
         }
     }
 
@@ -279,13 +279,6 @@ struct SettingsView: View {
         }
     }
 
-    private func requestReview() {
-        guard let scene = UIApplication.shared.connectedScenes
-            .compactMap({ $0 as? UIWindowScene })
-            .first else { return }
-        SKStoreReviewController.requestReview(in: scene)
-    }
-
     // MARK: - Reset
 
     private var resetSection: some View {
@@ -322,6 +315,13 @@ struct SettingsView: View {
                 remindersEnabled = granted
             }
         }
+    }
+
+    private func requestReview() {
+        guard let scene = UIApplication.shared.connectedScenes
+            .compactMap({ $0 as? UIWindowScene })
+            .first else { return }
+        SKStoreReviewController.requestReview(in: scene)
     }
 
     @MainActor
