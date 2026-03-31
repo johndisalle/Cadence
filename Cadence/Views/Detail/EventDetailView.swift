@@ -29,6 +29,10 @@ struct EventDetailView: View {
     @State private var showMilestoneAlert = false
     @State private var lastLogEntry: LogEntry?
 
+    // Share state
+    @State private var shareImage: UIImage?
+    @State private var showShareSheet = false
+
     private var stats: IntervalStats? {
         IntervalEngine.compute(for: event)
     }
@@ -102,6 +106,11 @@ struct EventDetailView: View {
         } message: {
             Text(milestoneToShow?.subtitle ?? "")
         }
+        .sheet(isPresented: $showShareSheet) {
+            if let image = shareImage {
+                ShareSheet(items: [image])
+            }
+        }
     }
 
     // MARK: - Overview Tab
@@ -131,6 +140,9 @@ struct EventDetailView: View {
                         .multilineTextAlignment(.center)
                         .padding(.horizontal)
                 }
+
+                // Share buttons
+                shareSection
 
                 // Chart
                 VStack(alignment: .leading, spacing: CadenceTheme.spacingSM) {
@@ -236,6 +248,68 @@ struct EventDetailView: View {
         }
         .cadenceCard(accent: event.accentColor)
         .padding(.horizontal)
+    }
+
+    // MARK: - Share Section
+
+    @ViewBuilder
+    private var shareSection: some View {
+        let streak = streakInfo
+        let hasStreak = (streak?.currentStreak ?? 0) > 0
+        let hasEnoughLogs = event.logs.count >= 3
+
+        if hasStreak || hasEnoughLogs {
+            HStack(spacing: CadenceTheme.spacingSM) {
+                if hasStreak {
+                    Button {
+                        let card = StreakShareCard(
+                            eventName: event.name,
+                            emoji: event.emoji,
+                            streakDays: streak?.currentStreak ?? 0,
+                            accentColorHex: event.accentColorHex
+                        )
+                        shareImage = card.renderAsImage(size: CGSize(width: 390, height: 520))
+                        showShareSheet = true
+                    } label: {
+                        Label("Share Streak", systemImage: "flame.fill")
+                            .font(.subheadline.weight(.medium))
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 10)
+                            .background(
+                                RoundedRectangle(cornerRadius: 10)
+                                    .fill(event.accentColor.opacity(0.12))
+                            )
+                            .foregroundStyle(event.accentColor)
+                    }
+                }
+
+                if hasEnoughLogs, let stats {
+                    Button {
+                        let card = RhythmShareCard(
+                            eventName: event.name,
+                            emoji: event.emoji,
+                            rhythm: stats.rhythm,
+                            consistency: Int(round(stats.confidencePercent)),
+                            totalLogs: event.logs.count,
+                            accentColorHex: event.accentColorHex
+                        )
+                        shareImage = card.renderAsImage(size: CGSize(width: 390, height: 520))
+                        showShareSheet = true
+                    } label: {
+                        Label("Share Rhythm", systemImage: "waveform.path.ecg")
+                            .font(.subheadline.weight(.medium))
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 10)
+                            .background(
+                                RoundedRectangle(cornerRadius: 10)
+                                    .fill(event.accentColor.opacity(0.12))
+                            )
+                            .foregroundStyle(event.accentColor)
+                    }
+                }
+            }
+            .padding(.horizontal)
+        }
     }
 
     // MARK: - Log Now Button

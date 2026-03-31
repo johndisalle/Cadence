@@ -26,6 +26,7 @@ struct InsightsView: View {
                     ScrollView {
                         VStack(spacing: CadenceTheme.spacingLG) {
                             pulseSection
+                            monthlyReportSection
                             suggestionsSection
                             breakdownSection
                         }
@@ -116,6 +117,47 @@ struct InsightsView: View {
         } else {
             return CadenceTheme.coral
         }
+    }
+
+    // MARK: - Monthly Report Section
+
+    private var monthlyReportSection: some View {
+        let report = RhythmReportEngine.monthlyReport(events: events)
+        return NavigationLink {
+            RhythmReportView()
+        } label: {
+            HStack(spacing: CadenceTheme.spacingMD) {
+                Image(systemName: "calendar.badge.clock")
+                    .font(.title3)
+                    .foregroundStyle(CadenceTheme.teal)
+
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(report.month)
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(CadenceTheme.textPrimary)
+
+                    HStack(spacing: CadenceTheme.spacingXS) {
+                        Text("\(report.totalLogs) logs")
+                            .font(.caption)
+                            .foregroundStyle(CadenceTheme.textSecondary)
+
+                        if let percent = report.consistencyPercent {
+                            Text("\u{2022} \(percent)% consistency")
+                                .font(.caption)
+                                .foregroundStyle(CadenceTheme.textSecondary)
+                        }
+                    }
+                }
+
+                Spacer()
+
+                Image(systemName: "chevron.right")
+                    .font(.caption)
+                    .foregroundStyle(CadenceTheme.textTertiary)
+            }
+            .cadenceCard(accent: CadenceTheme.teal)
+        }
+        .buttonStyle(.plain)
     }
 
     // MARK: - Suggestions Section
