@@ -272,18 +272,6 @@ struct SettingsView: View {
     }
 }
 
-// MARK: - Share Sheet
-
-private struct ShareSheet: UIViewControllerRepresentable {
-    let items: [Any]
-
-    func makeUIViewController(context: Context) -> UIActivityViewController {
-        UIActivityViewController(activityItems: items, applicationActivities: nil)
-    }
-
-    func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
-}
-
 #Preview {
     SettingsView()
         .modelContainer(for: [Event.self, LogEntry.self], inMemory: true)
