@@ -57,7 +57,7 @@ struct EventDetailView: View {
                 historyTab
             }
         }
-        .navigationTitle("\(event.emoji) \(event.name)")
+        .navigationTitle(event.name)
         .navigationBarTitleDisplayMode(.large)
         .toolbar {
             ToolbarItem(placement: .primaryAction) {

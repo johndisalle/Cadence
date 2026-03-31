@@ -61,7 +61,7 @@ struct PDFExportService {
                     .foregroundColor: UIColor.label
                 ]
                 let header = NSAttributedString(
-                    string: "\(event.emoji) \(event.name)",
+                    string: event.name,
                     attributes: headerAttrs
                 )
                 header.draw(at: CGPoint(x: margin, y: y))

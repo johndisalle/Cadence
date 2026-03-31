@@ -44,7 +44,7 @@ struct LogEventIntent: AppIntent {
         let stats = IntervalEngine.compute(for: event)
         let rhythm = stats?.rhythm ?? "Keep logging!"
 
-        return .result(dialog: "\(event.emoji) Logged \(event.name)! \(rhythm)")
+        return .result(dialog: "Logged \(event.name)! \(rhythm)")
     }
 }
 

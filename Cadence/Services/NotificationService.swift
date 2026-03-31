@@ -16,7 +16,7 @@ final class NotificationService {
 
     func scheduleReminder(for event: Event, in days: Double) {
         let content = UNMutableNotificationContent()
-        content.title = "\(event.emoji) \(event.name)"
+        content.title = event.name
         content.body = "It's time to log \(event.name). Tap to record it now!"
         content.sound = .default
         content.categoryIdentifier = "EVENT_REMINDER"
