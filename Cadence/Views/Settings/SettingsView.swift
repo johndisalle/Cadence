@@ -89,13 +89,23 @@ struct SettingsView: View {
     private var dataSection: some View {
         Section("Data") {
             Button {
-                exportPDF()
+                if premium.canExport() {
+                    exportPDF()
+                } else {
+                    showPaywall = true
+                }
             } label: {
                 HStack {
                     Image(systemName: "doc.richtext")
                         .foregroundStyle(CadenceTheme.teal)
                     Text("Export PDF Summary")
                         .foregroundStyle(CadenceTheme.textPrimary)
+                    if !premium.canExport() {
+                        Spacer()
+                        Image(systemName: "crown.fill")
+                            .font(.caption)
+                            .foregroundStyle(CadenceTheme.sand)
+                    }
                 }
             }
             .listRowBackground(CadenceTheme.backgroundSecondary)
@@ -145,9 +155,10 @@ struct SettingsView: View {
 
     private var familySharingSection: some View {
         Section("Family Sharing") {
-            NavigationLink {
-                FamilySharingView()
-            } label: {
+            if premium.canUseFamilySharing() {
+                NavigationLink {
+                    FamilySharingView()
+                } label: {
                 HStack {
                     Image(systemName: "person.2.fill")
                         .foregroundStyle(CadenceTheme.teal)
@@ -159,6 +170,26 @@ struct SettingsView: View {
                             : "Off")
                             .font(.caption)
                             .foregroundStyle(CadenceTheme.textSecondary)
+                    }
+                }
+            } else {
+                Button {
+                    showPaywall = true
+                } label: {
+                    HStack {
+                        Image(systemName: "person.2.fill")
+                            .foregroundStyle(CadenceTheme.teal)
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("Family Sharing")
+                                .foregroundStyle(CadenceTheme.textPrimary)
+                            Text("Sync shared household tasks via iCloud")
+                                .font(.caption)
+                                .foregroundStyle(CadenceTheme.textSecondary)
+                        }
+                        Spacer()
+                        Image(systemName: "crown.fill")
+                            .font(.caption)
+                            .foregroundStyle(CadenceTheme.sand)
                     }
                 }
             }

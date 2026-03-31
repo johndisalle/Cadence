@@ -33,6 +33,7 @@ struct EventDetailView: View {
     @State private var shareImage: UIImage?
     @State private var showShareSheet = false
     @State private var showFamilyNudge = false
+    @State private var showPaywall = false
 
     private var stats: IntervalStats? {
         IntervalEngine.compute(for: event)
@@ -122,6 +123,9 @@ struct EventDetailView: View {
         .sheet(isPresented: $showFamilyNudge) {
             FamilyNudgeSheet(event: event)
         }
+        .sheet(isPresented: $showPaywall) {
+            PaywallView()
+        }
     }
 
     // MARK: - Overview Tab
@@ -157,9 +161,35 @@ struct EventDetailView: View {
 
                 // Chart
                 VStack(alignment: .leading, spacing: CadenceTheme.spacingSM) {
-                    Text("Interval Trend")
-                        .font(.headline)
-                    IntervalChartView(event: event)
+                    HStack {
+                        Text("Interval Trend")
+                            .font(.headline)
+                        Spacer()
+                        if !PremiumManager.shared.isPremium {
+                            Image(systemName: "crown.fill")
+                                .font(.caption)
+                                .foregroundStyle(CadenceTheme.sand)
+                        }
+                    }
+                    if PremiumManager.shared.isPremium {
+                        IntervalChartView(event: event)
+                    } else {
+                        IntervalChartView(event: event)
+                            .blur(radius: 6)
+                            .allowsHitTesting(false)
+                            .overlay {
+                                Button {
+                                    showPaywall = true
+                                } label: {
+                                    Label("Unlock Charts", systemImage: "crown.fill")
+                                        .font(.subheadline.weight(.semibold))
+                                        .foregroundStyle(.white)
+                                        .padding(.horizontal, 20)
+                                        .padding(.vertical, 10)
+                                        .background(Capsule().fill(CadenceTheme.teal))
+                                }
+                            }
+                    }
                 }
                 .cadenceCard(accent: event.accentColor)
                 .padding(.horizontal)
