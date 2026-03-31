@@ -267,6 +267,48 @@ struct SettingsView: View {
             }
             .listRowBackground(CadenceTheme.backgroundSecondary)
 
+            Link(destination: URL(string: "https://johndisalle.github.io/Cadence/privacy.html")!) {
+                HStack {
+                    Image(systemName: "lock.shield.fill")
+                        .foregroundStyle(CadenceTheme.teal)
+                    Text("Privacy Policy")
+                        .foregroundStyle(CadenceTheme.textPrimary)
+                    Spacer()
+                    Image(systemName: "arrow.up.right")
+                        .font(.caption)
+                        .foregroundStyle(CadenceTheme.textTertiary)
+                }
+            }
+            .listRowBackground(CadenceTheme.backgroundSecondary)
+
+            Link(destination: URL(string: "https://johndisalle.github.io/Cadence/terms.html")!) {
+                HStack {
+                    Image(systemName: "doc.text.fill")
+                        .foregroundStyle(CadenceTheme.teal)
+                    Text("Terms & Conditions")
+                        .foregroundStyle(CadenceTheme.textPrimary)
+                    Spacer()
+                    Image(systemName: "arrow.up.right")
+                        .font(.caption)
+                        .foregroundStyle(CadenceTheme.textTertiary)
+                }
+            }
+            .listRowBackground(CadenceTheme.backgroundSecondary)
+
+            Link(destination: URL(string: "https://johndisalle.github.io/Cadence/support.html")!) {
+                HStack {
+                    Image(systemName: "questionmark.circle.fill")
+                        .foregroundStyle(CadenceTheme.teal)
+                    Text("Help & Support")
+                        .foregroundStyle(CadenceTheme.textPrimary)
+                    Spacer()
+                    Image(systemName: "arrow.up.right")
+                        .font(.caption)
+                        .foregroundStyle(CadenceTheme.textTertiary)
+                }
+            }
+            .listRowBackground(CadenceTheme.backgroundSecondary)
+
             VStack(alignment: .leading, spacing: CadenceTheme.spacingXS) {
                 Text("Cadence")
                     .font(.headline)
