@@ -16,6 +16,7 @@ struct CadenceApp: App {
         }
 
         NotificationService.shared.registerCategories()
+        PhoneConnectivityManager.shared.configure(with: modelContainer)
     }
 
     var body: some Scene {

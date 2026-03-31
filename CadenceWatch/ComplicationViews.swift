@@ -166,21 +166,31 @@ struct CornerComplicationView: View {
 
 // MARK: - Widget
 
+/// Dispatches to the correct complication view based on the active widget family.
+struct CadenceComplicationEntryView: View {
+    @Environment(\.widgetFamily) var widgetFamily
+    let entry: CadenceComplicationEntry
+
+    var body: some View {
+        switch widgetFamily {
+        case .accessoryCircular:
+            CircularComplicationView(entry: entry)
+        case .accessoryRectangular:
+            RectangularComplicationView(entry: entry)
+        case .accessoryCorner:
+            CornerComplicationView(entry: entry)
+        default:
+            CircularComplicationView(entry: entry)
+        }
+    }
+}
+
 struct CadenceComplication: Widget {
     let kind = "CadenceComplication"
 
     var body: some WidgetConfiguration {
         StaticConfiguration(kind: kind, provider: CadenceComplicationProvider()) { entry in
-            switch entry.widgetFamily {
-            case .accessoryCircular:
-                CircularComplicationView(entry: entry)
-            case .accessoryRectangular:
-                RectangularComplicationView(entry: entry)
-            case .accessoryCorner:
-                CornerComplicationView(entry: entry)
-            default:
-                CircularComplicationView(entry: entry)
-            }
+            CadenceComplicationEntryView(entry: entry)
         }
         .configurationDisplayName("Cadence")
         .description("See your most urgent events at a glance.")
@@ -189,14 +199,6 @@ struct CadenceComplication: Widget {
             .accessoryRectangular,
             .accessoryCorner
         ])
-    }
-}
-
-// Helper to access widget family inside the entry view
-private extension CadenceComplicationEntry {
-    var widgetFamily: WidgetFamily {
-        // This is resolved at runtime by the widget system
-        .accessoryCircular
     }
 }
 

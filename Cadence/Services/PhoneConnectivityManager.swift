@@ -85,12 +85,24 @@ final class PhoneConnectivityManager: NSObject, ObservableObject, WCSessionDeleg
 
     // Also handle without reply
     func session(_ session: WCSession, didReceiveMessage message: [String: Any]) {
-        guard let action = message["action"] as? String,
-              action == "log",
-              let eventID = message["eventID"] as? String else { return }
+        guard let action = message["action"] as? String else { return }
 
-        Task { @MainActor in
-            _ = handleLogFromWatch(eventID: eventID)
+        switch action {
+        case "log":
+            guard let eventID = message["eventID"] as? String else { return }
+            Task { @MainActor in
+                _ = handleLogFromWatch(eventID: eventID)
+            }
+        case "requestSync":
+            Task { @MainActor in
+                guard let container = modelContainer else { return }
+                let context = container.mainContext
+                if let allEvents = try? context.fetch(FetchDescriptor<Event>()) {
+                    syncEventsToWatch(events: allEvents)
+                }
+            }
+        default:
+            break
         }
     }
 
