@@ -10,7 +10,7 @@ final class PremiumManager {
     // Product IDs — configure these in App Store Connect
     static let monthlyID = "com.cadence.app.pro.monthly"
     static let yearlyID = "com.cadence.app.pro.yearly"
-    static let lifetimeID = "com.cadence.app.pro.lifetime"
+    static let lifetimeID = "com.cadence.app.pro.lifetimev2"
 
     var isPremium: Bool = false
     var products: [Product] = []
