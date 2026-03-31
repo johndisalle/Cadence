@@ -173,7 +173,7 @@ struct IntervalEngine {
         let name = event.name
 
         if daysSinceLast < predicted * 0.5 {
-            return "You're ahead of schedule on \(name) — nice rhythm! 🎯"
+            return "You're ahead of schedule on \(name) — nice rhythm!"
         } else if daysSinceLast > predicted * 1.3 {
             let overdue = Int(daysSinceLast - predicted)
             return "\(name) is about \(overdue) day\(overdue == 1 ? "" : "s") past your usual rhythm."

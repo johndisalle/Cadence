@@ -121,7 +121,7 @@ struct GetDueEventsIntent: AppIntent {
         }
 
         if overdueEvents.isEmpty {
-            return .result(dialog: "All caught up! Nothing overdue in Cadence. ✨")
+            return .result(dialog: "All caught up! Nothing overdue in Cadence.")
         }
 
         let names = overdueEvents.prefix(5).map { "\($0.0.emoji) \($0.0.name)" }.joined(separator: ", ")

@@ -147,7 +147,7 @@ struct InsightsEngine {
 
         if !consistentEvents.isEmpty {
             let names = consistentEvents.prefix(2).map { $0.name }.joined(separator: " and ")
-            suggestions.append("Great consistency with \(names)! Your rhythm is rock solid. 🎯")
+            suggestions.append("Great consistency with \(names)! Your rhythm is rock solid.")
         }
 
         return Array(suggestions.prefix(5))
@@ -194,7 +194,7 @@ struct InsightsEngine {
         }
         switch score {
         case 90...100:
-            return "Your life is flowing beautifully at \(score)% this week. Everything's on rhythm! ✨"
+            return "Your life is flowing beautifully at \(score)% this week. Everything's on rhythm!"
         case 70..<90:
             return "Solid week at \(score)%! A few things could use attention, but you're doing great."
         case 50..<70:
