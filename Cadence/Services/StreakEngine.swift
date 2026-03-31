@@ -38,7 +38,6 @@ struct StreakEngine {
         // For each pair, the threshold is 1.5x the running average up to that point
         var currentStreak = 1  // first log always counts
         var longestStreak = 1
-        var streakStartIndex = 0
         var currentStreakStartIndex = 0
 
         for i in 0..<intervals.count {
@@ -60,7 +59,6 @@ struct StreakEngine {
                 // Streak broken
                 if currentStreak > longestStreak {
                     longestStreak = currentStreak
-                    streakStartIndex = currentStreakStartIndex
                 }
                 currentStreak = 1
                 currentStreakStartIndex = i + 1
