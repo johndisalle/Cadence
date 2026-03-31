@@ -28,6 +28,8 @@
 	<string>Cadence lets you attach photos to your activity logs.</string>
 	<key>NSUserNotificationsUsageDescription</key>
 	<string>Cadence sends gentle reminders when activities are due.</string>
+	<key>NSRemindersUsageDescription</key>
+	<string>Cadence can import your completed reminders to automatically detect recurring patterns and create events.</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>

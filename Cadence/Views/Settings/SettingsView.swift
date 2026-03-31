@@ -31,6 +31,7 @@ struct SettingsView: View {
                 appearanceSection
                 notificationsSection
                 dataSection
+                importSection
                 familySharingSection
                 aboutSection
                 resetSection
@@ -107,6 +108,29 @@ struct SettingsView: View {
                         .foregroundStyle(CadenceTheme.teal)
                     Text("Load Sample Data")
                         .foregroundStyle(CadenceTheme.textPrimary)
+                }
+            }
+            .listRowBackground(CadenceTheme.backgroundSecondary)
+        }
+    }
+
+    // MARK: - Import
+
+    private var importSection: some View {
+        Section("Import") {
+            NavigationLink {
+                RemindersImportView()
+            } label: {
+                HStack {
+                    Image(systemName: "square.and.arrow.down")
+                        .foregroundStyle(CadenceTheme.teal)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Import from Reminders")
+                            .foregroundStyle(CadenceTheme.textPrimary)
+                        Text("Find recurring patterns in completed reminders")
+                            .font(.caption)
+                            .foregroundStyle(CadenceTheme.textSecondary)
+                    }
                 }
             }
             .listRowBackground(CadenceTheme.backgroundSecondary)

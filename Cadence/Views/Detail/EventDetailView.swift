@@ -32,6 +32,7 @@ struct EventDetailView: View {
     // Share state
     @State private var shareImage: UIImage?
     @State private var showShareSheet = false
+    @State private var showFamilyNudge = false
 
     private var stats: IntervalStats? {
         IntervalEngine.compute(for: event)
@@ -67,6 +68,13 @@ struct EventDetailView: View {
                     Image(systemName: "pencil.circle.fill")
                         .symbolRenderingMode(.hierarchical)
                         .font(.title3)
+                }
+            }
+            ToolbarItem(placement: .secondaryAction) {
+                Button {
+                    showFamilyNudge = true
+                } label: {
+                    Label("Remind Someone", systemImage: "person.badge.clock")
                 }
             }
             ToolbarItem(placement: .secondaryAction) {
@@ -110,6 +118,9 @@ struct EventDetailView: View {
             if let image = shareImage {
                 ShareSheet(items: [image])
             }
+        }
+        .sheet(isPresented: $showFamilyNudge) {
+            FamilyNudgeSheet(event: event)
         }
     }
 
