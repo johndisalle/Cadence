@@ -1,5 +1,6 @@
 import SwiftUI
 import SwiftData
+import StoreKit
 
 struct SettingsView: View {
     @Environment(\.modelContext) private var modelContext
@@ -254,6 +255,18 @@ struct SettingsView: View {
             }
             .listRowBackground(CadenceTheme.backgroundSecondary)
 
+            Button {
+                requestReview()
+            } label: {
+                HStack {
+                    Image(systemName: "star.fill")
+                        .foregroundStyle(CadenceTheme.sand)
+                    Text("Rate Cadence on the App Store")
+                        .foregroundStyle(CadenceTheme.textPrimary)
+                }
+            }
+            .listRowBackground(CadenceTheme.backgroundSecondary)
+
             VStack(alignment: .leading, spacing: CadenceTheme.spacingXS) {
                 Text("Cadence")
                     .font(.headline)
@@ -264,6 +277,13 @@ struct SettingsView: View {
             }
             .listRowBackground(CadenceTheme.backgroundSecondary)
         }
+    }
+
+    private func requestReview() {
+        guard let scene = UIApplication.shared.connectedScenes
+            .compactMap({ $0 as? UIWindowScene })
+            .first else { return }
+        SKStoreReviewController.requestReview(in: scene)
     }
 
     // MARK: - Reset

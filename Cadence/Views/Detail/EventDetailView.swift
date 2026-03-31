@@ -2,6 +2,7 @@ import SwiftUI
 import SwiftData
 import Charts
 import PhotosUI
+import StoreKit
 
 struct EventDetailView: View {
     @Bindable var event: Event
@@ -496,6 +497,17 @@ struct EventDetailView: View {
         // Haptic feedback
         let generator = UIImpactFeedbackGenerator(style: .medium)
         generator.impactOccurred()
+
+        // Smart review prompt — ask at 10th, 50th, 100th total log
+        let totalLogs = UserDefaults.standard.integer(forKey: "cadence_total_logs") + 1
+        UserDefaults.standard.set(totalLogs, forKey: "cadence_total_logs")
+        if [10, 50, 100].contains(totalLogs) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                guard let scene = UIApplication.shared.connectedScenes
+                    .compactMap({ $0 as? UIWindowScene }).first else { return }
+                SKStoreReviewController.requestReview(in: scene)
+            }
+        }
     }
 
     private func undoLastLog() {
