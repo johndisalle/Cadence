@@ -137,7 +137,6 @@ struct HomeView: View {
         .padding(.horizontal, CadenceTheme.spacingMD)
         .padding(.top, CadenceTheme.spacingSM)
         .padding(.bottom, CadenceTheme.spacingXL)
-        }
     }
 
     // MARK: - Sort Picker
