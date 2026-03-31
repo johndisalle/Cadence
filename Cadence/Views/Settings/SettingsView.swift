@@ -111,17 +111,6 @@ struct SettingsView: View {
             }
             .listRowBackground(CadenceTheme.backgroundSecondary)
 
-            Button {
-                loadSampleData()
-            } label: {
-                HStack {
-                    Image(systemName: "tray.and.arrow.down")
-                        .foregroundStyle(CadenceTheme.teal)
-                    Text("Load Sample Data")
-                        .foregroundStyle(CadenceTheme.textPrimary)
-                }
-            }
-            .listRowBackground(CadenceTheme.backgroundSecondary)
         }
     }
 
