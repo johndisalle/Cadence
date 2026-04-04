@@ -49,6 +49,7 @@ struct HomeView: View {
                     emptyState
                 } else {
                     ScrollView {
+                        greetingHeader
                         if showAsGrid {
                             gridContent
                         } else {
@@ -105,6 +106,41 @@ struct HomeView: View {
                 selectedEventID?.wrappedValue = nil
             }
         }
+    }
+
+    // MARK: - Greeting Header
+
+    private var greetingHeader: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(greetingText)
+                .font(.subheadline)
+                .foregroundStyle(CadenceTheme.textSecondary)
+            if overdueCount > 0 {
+                Text("\(overdueCount) thing\(overdueCount == 1 ? "" : "s") need\(overdueCount == 1 ? "s" : "") attention")
+                    .font(.caption)
+                    .foregroundStyle(CadenceTheme.urgencyHigh)
+            } else {
+                Text("You're all caught up!")
+                    .font(.caption)
+                    .foregroundStyle(CadenceTheme.sage)
+            }
+        }
+        .padding(.horizontal, CadenceTheme.spacingMD)
+        .padding(.top, CadenceTheme.spacingSM)
+    }
+
+    private var greetingText: String {
+        let hour = Calendar.current.component(.hour, from: Date())
+        if hour < 12 { return "Good morning" }
+        if hour < 17 { return "Good afternoon" }
+        return "Good evening"
+    }
+
+    private var overdueCount: Int {
+        events.filter { event in
+            guard let stats = IntervalEngine.compute(for: event) else { return false }
+            return stats.isOverdue
+        }.count
     }
 
     // MARK: - Grid

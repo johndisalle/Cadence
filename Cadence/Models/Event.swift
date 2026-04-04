@@ -17,6 +17,7 @@ final class Event {
     var sortOrder: Int = 0
     var isShared: Bool = false
     var locationReminder: String?
+    var preferredReminderHour: Int = 9  // default 9 AM
 
     var category: EventCategory {
         get { EventCategory(rawValue: categoryRaw) ?? .general }
@@ -51,7 +52,8 @@ final class Event {
         category: EventCategory = .general,
         customNotes: String? = nil,
         isShared: Bool = false,
-        locationReminder: String? = nil
+        locationReminder: String? = nil,
+        preferredReminderHour: Int = 9
     ) {
         self.id = UUID()
         self.name = name
@@ -65,6 +67,7 @@ final class Event {
         self.sortOrder = 0
         self.isShared = isShared
         self.locationReminder = locationReminder
+        self.preferredReminderHour = preferredReminderHour
     }
 }
 

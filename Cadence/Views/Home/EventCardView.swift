@@ -210,7 +210,13 @@ struct EventCardView: View {
         }
 
         // Show toast
-        toastMessage = "Logged \(event.name)!"
+        if let stats = IntervalEngine.compute(for: event),
+           let nextDate = stats.predictedNextDate {
+            let daysUntil = max(1, Int(Date().daysUntil(nextDate)))
+            toastMessage = "Logged! Next in ~\(daysUntil)d"
+        } else {
+            toastMessage = "Logged \(event.name)!"
+        }
         showToast = true
 
         let generator = UIImpactFeedbackGenerator(style: .medium)

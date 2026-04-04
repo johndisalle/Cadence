@@ -18,7 +18,7 @@ final class PremiumManager {
     var isLoading: Bool = false
 
     // Free tier limits
-    static let freeEventLimit = 5
+    static let freeEventLimit = 8
     static let freeExportLimit = 1 // per month
 
     private var transactionListener: Task<Void, Never>?

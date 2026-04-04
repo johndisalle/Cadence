@@ -30,6 +30,11 @@ struct EventDetailView: View {
     @State private var showMilestoneAlert = false
     @State private var lastLogEntry: LogEntry?
 
+    // Backdate state
+    @State private var showBackdateSheet = false
+    @State private var backdateDate = Date()
+    @State private var backdateNotes = ""
+
     // Share state
     @State private var shareImage: UIImage?
     @State private var showShareSheet = false
@@ -121,6 +126,9 @@ struct EventDetailView: View {
                 ShareSheet(items: [image])
             }
         }
+        .sheet(isPresented: $showBackdateSheet) {
+            backdateSheet
+        }
         .sheet(isPresented: $showFamilyNudge) {
             FamilyNudgeSheet(event: event)
         }
@@ -142,6 +150,24 @@ struct EventDetailView: View {
 
                 // Stats box
                 statsCard
+
+                // Encouragement for empty events
+                if event.logs.isEmpty {
+                    VStack(spacing: CadenceTheme.spacingSM) {
+                        Image(systemName: "waveform.path.ecg")
+                            .font(.system(size: 32))
+                            .foregroundStyle(CadenceTheme.teal.opacity(0.4))
+                        Text("Log your first one!")
+                            .font(.headline)
+                            .foregroundStyle(CadenceTheme.textPrimary)
+                        Text("After 3 logs, Cadence starts learning your rhythm and predicting when you'll need to do it next.")
+                            .font(.subheadline)
+                            .foregroundStyle(CadenceTheme.textSecondary)
+                            .multilineTextAlignment(.center)
+                    }
+                    .padding(.horizontal, CadenceTheme.spacingLG)
+                    .padding(.vertical, CadenceTheme.spacingMD)
+                }
 
                 // Confidence ring
                 if let stats, stats.confidencePercent > 0 {
@@ -357,21 +383,33 @@ struct EventDetailView: View {
     // MARK: - Log Now Button
 
     private var logNowButton: some View {
-        Button {
-            addLog(notes: nil, photoData: nil)
-        } label: {
-            Label("Log Now", systemImage: "plus.circle.fill")
-                .font(.headline)
-                .foregroundStyle(.white)
-                .frame(maxWidth: .infinity)
-                .padding()
-                .background(
-                    RoundedRectangle(cornerRadius: 16)
-                        .fill(event.accentColor)
-                        .shadow(color: event.accentColor.opacity(0.4), radius: 12, y: 6)
-                )
-                .padding(.horizontal, CadenceTheme.spacingLG)
-                .padding(.bottom, CadenceTheme.spacingMD)
+        VStack(spacing: 6) {
+            Button {
+                addLog(notes: nil, photoData: nil)
+            } label: {
+                Label("Log Now", systemImage: "plus.circle.fill")
+                    .font(.headline)
+                    .foregroundStyle(.white)
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(
+                        RoundedRectangle(cornerRadius: 16)
+                            .fill(event.accentColor)
+                            .shadow(color: event.accentColor.opacity(0.4), radius: 12, y: 6)
+                    )
+                    .padding(.horizontal, CadenceTheme.spacingLG)
+            }
+
+            Button {
+                backdateDate = Date()
+                backdateNotes = ""
+                showBackdateSheet = true
+            } label: {
+                Text("Log a past date")
+                    .font(.caption)
+                    .foregroundStyle(event.accentColor)
+            }
+            .padding(.bottom, CadenceTheme.spacingMD)
         }
     }
 
@@ -471,8 +509,8 @@ struct EventDetailView: View {
 
     // MARK: - Actions
 
-    private func addLog(notes: String?, photoData: Data?) {
-        let log = LogEntry(timestamp: Date(), notes: notes, photoData: photoData, event: event)
+    private func addLog(notes: String?, photoData: Data?, date: Date = Date()) {
+        let log = LogEntry(timestamp: date, notes: notes, photoData: photoData, event: event)
         event.logs.append(log)
         modelContext.insert(log)
 
@@ -490,7 +528,13 @@ struct EventDetailView: View {
         }
 
         // Show toast
-        toastMessage = "Logged \(event.name)!"
+        if let stats = IntervalEngine.compute(for: event),
+           let nextDate = stats.predictedNextDate {
+            let daysUntil = max(1, Int(Date().daysUntil(nextDate)))
+            toastMessage = "Logged! Next expected in \(daysUntil)d"
+        } else {
+            toastMessage = "Logged \(event.name)!"
+        }
         showToast = true
         lastLogEntry = log  // for undo
 
@@ -537,6 +581,42 @@ struct EventDetailView: View {
                     Button("Log") {
                         addLog(notes: noteText.isEmpty ? nil : noteText, photoData: nil)
                         showNoteLogSheet = false
+                    }
+                    .fontWeight(.semibold)
+                }
+            }
+        }
+        .presentationDetents([.medium])
+    }
+
+    // MARK: - Backdate Sheet
+
+    private var backdateSheet: some View {
+        NavigationStack {
+            Form {
+                Section("Date & Time") {
+                    DatePicker(
+                        "When did it happen?",
+                        selection: $backdateDate,
+                        in: ...Date(),
+                        displayedComponents: [.date, .hourAndMinute]
+                    )
+                }
+                Section("Note") {
+                    TextField("Optional notes...", text: $backdateNotes, axis: .vertical)
+                        .lineLimit(2...5)
+                }
+            }
+            .navigationTitle("Log Past Event")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel") { showBackdateSheet = false }
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Log") {
+                        addLog(notes: backdateNotes.isEmpty ? nil : backdateNotes, photoData: nil, date: backdateDate)
+                        showBackdateSheet = false
                     }
                     .fontWeight(.semibold)
                 }

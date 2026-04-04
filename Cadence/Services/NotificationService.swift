@@ -42,12 +42,19 @@ final class NotificationService {
         guard let stats = IntervalEngine.compute(for: event),
               let nextDate = stats.predictedNextDate else { return }
 
-        let daysUntil = Date().daysUntil(nextDate)
+        // Schedule at the user's preferred time on the predicted day
+        let calendar = Calendar.current
+        var components = calendar.dateComponents([.year, .month, .day], from: nextDate)
+        components.hour = event.preferredReminderHour
+        components.minute = 0
+
+        guard let scheduledDate = calendar.date(from: components) else { return }
+        let daysUntil = Date().daysUntil(scheduledDate)
 
         if daysUntil > 0 {
             scheduleReminder(for: event, in: daysUntil)
         } else {
-            // Already overdue — remind in 1 hour
+            // Already past — remind in 1 hour
             scheduleReminder(for: event, in: 1.0 / 24.0)
         }
     }

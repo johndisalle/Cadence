@@ -12,6 +12,7 @@ struct EditEventView: View {
     @State private var category: EventCategory = .general
     @State private var customNotes: String = ""
     @State private var showDeleteConfirmation = false
+    @State private var reminderHour: Int = 9
 
     var body: some View {
         NavigationStack {
@@ -81,6 +82,15 @@ struct EditEventView: View {
                         .lineLimit(3...6)
                 }
 
+                // MARK: - Reminder Time
+                Section("Reminder Time") {
+                    Picker("Preferred time", selection: $reminderHour) {
+                        ForEach(6..<23) { hour in
+                            Text(formatHour(hour)).tag(hour)
+                        }
+                    }
+                }
+
                 // MARK: - Archive
                 Section {
                     Button {
@@ -136,6 +146,7 @@ struct EditEventView: View {
                 accentColorHex = event.accentColorHex
                 category = event.category
                 customNotes = event.customNotes ?? ""
+                reminderHour = event.preferredReminderHour
             }
         }
     }
@@ -146,6 +157,16 @@ struct EditEventView: View {
         event.accentColorHex = accentColorHex
         event.category = category
         event.customNotes = customNotes.isEmpty ? nil : customNotes
+        event.preferredReminderHour = reminderHour
+    }
+
+    private func formatHour(_ hour: Int) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "h a"
+        var components = DateComponents()
+        components.hour = hour
+        let date = Calendar.current.date(from: components) ?? Date()
+        return formatter.string(from: date)
     }
 }
 
