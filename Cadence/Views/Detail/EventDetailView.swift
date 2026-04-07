@@ -260,7 +260,7 @@ struct EventDetailView: View {
                     HStack(spacing: 4) {
                         Image(systemName: "flame.fill")
                             .foregroundStyle(CadenceTheme.coral)
-                        Text("\(streak.currentStreak)-day streak")
+                        Text("\(streak.currentStreak) in a row")
                             .font(.subheadline.weight(.semibold))
                             .foregroundStyle(CadenceTheme.textPrimary)
                     }

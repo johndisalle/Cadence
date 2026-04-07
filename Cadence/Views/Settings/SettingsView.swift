@@ -33,6 +33,9 @@ struct SettingsView: View {
                 notificationsSection
                 dataSection
                 importSection
+                if archivedEventCount > 0 {
+                    archivedSection
+                }
                 familySharingSection
                 aboutSection
                 resetSection
@@ -131,6 +134,31 @@ struct SettingsView: View {
                             .font(.caption)
                             .foregroundStyle(CadenceTheme.textSecondary)
                     }
+                }
+            }
+            .listRowBackground(CadenceTheme.backgroundSecondary)
+        }
+    }
+
+    // MARK: - Archived
+
+    private var archivedEventCount: Int {
+        events.filter { $0.isArchived }.count
+    }
+
+    private var archivedSection: some View {
+        Section("Archived") {
+            NavigationLink {
+                ArchivedEventsView()
+            } label: {
+                HStack {
+                    Image(systemName: "archivebox.fill")
+                        .foregroundStyle(CadenceTheme.textTertiary)
+                    Text("Archived Events")
+                        .foregroundStyle(CadenceTheme.textPrimary)
+                    Spacer()
+                    Text("\(archivedEventCount)")
+                        .foregroundStyle(CadenceTheme.textSecondary)
                 }
             }
             .listRowBackground(CadenceTheme.backgroundSecondary)

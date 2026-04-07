@@ -205,8 +205,9 @@ struct FamilySharingView: View {
 
     private func eventRow(_ event: Event, isShared: Bool) -> some View {
         HStack {
-            Text(event.emoji)
+            Image(systemName: event.emoji)
                 .font(.title3)
+                .foregroundStyle(event.accentColor)
             Text(event.name)
                 .foregroundStyle(CadenceTheme.textPrimary)
             Spacer()

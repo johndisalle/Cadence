@@ -1,8 +1,62 @@
 import SwiftUI
 import SwiftData
+import UserNotifications
+
+class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDelegate {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+        UNUserNotificationCenter.current().delegate = self
+        return true
+    }
+
+    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse) async {
+        let eventIDString = response.notification.request.content.userInfo["eventID"] as? String ?? ""
+
+        switch response.actionIdentifier {
+        case "LOG_NOW":
+            guard let uuid = UUID(uuidString: eventIDString) else { return }
+            do {
+                let container = try ModelContainer(for: Event.self, LogEntry.self)
+                let context = container.mainContext
+                let descriptor = FetchDescriptor<Event>(
+                    predicate: #Predicate<Event> { event in event.id == uuid }
+                )
+                guard let event = try context.fetch(descriptor).first else { return }
+                let log = LogEntry(timestamp: Date(), event: event)
+                event.logs.append(log)
+                context.insert(log)
+                try context.save()
+                NotificationService.shared.scheduleSmartReminders(for: event)
+            } catch {
+                print("Failed to log from notification: \(error)")
+            }
+
+        case "SNOOZE":
+            guard let uuid = UUID(uuidString: eventIDString) else { return }
+            do {
+                let container = try ModelContainer(for: Event.self, LogEntry.self)
+                let context = container.mainContext
+                let descriptor = FetchDescriptor<Event>(
+                    predicate: #Predicate<Event> { event in event.id == uuid }
+                )
+                guard let event = try context.fetch(descriptor).first else { return }
+                NotificationService.shared.scheduleReminder(for: event, in: 1.0 / 24.0)
+            } catch {
+                print("Failed to snooze: \(error)")
+            }
+
+        default:
+            break
+        }
+    }
+
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification) async -> UNNotificationPresentationOptions {
+        [.banner, .sound, .badge]
+    }
+}
 
 @main
 struct CadenceApp: App {
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     let modelContainer: ModelContainer
 
     init() {
@@ -32,6 +86,8 @@ struct CadenceApp: App {
 struct RootView: View {
     @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
     @AppStorage("appearanceMode") private var appearanceMode: String = "system"
+    @Environment(\.scenePhase) private var scenePhase
+    @Query(filter: #Predicate<Event> { !$0.isArchived }) private var events: [Event]
 
     @State private var showLaunchScreen = true
     @State private var selectedEventID: UUID?
@@ -72,6 +128,12 @@ struct RootView: View {
                 withAnimation(.easeOut(duration: 0.4)) {
                     showLaunchScreen = false
                 }
+            }
+            WidgetDataService.writeToSharedDefaults(events: events)
+        }
+        .onChange(of: scenePhase) { _, newPhase in
+            if newPhase == .background || newPhase == .inactive {
+                WidgetDataService.writeToSharedDefaults(events: events)
             }
         }
         .onOpenURL { url in

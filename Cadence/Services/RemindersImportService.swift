@@ -45,29 +45,25 @@ final class RemindersImportService {
         }
 
         // Group by title (case-insensitive)
-        var grouped: [String: (dates: [Date], listName: String)] = [:]
+        var grouped: [String: (dates: [Date], listName: String, originalTitle: String)] = [:]
         for reminder in reminders {
             let key = reminder.title?.trimmingCharacters(in: .whitespaces).lowercased() ?? ""
             guard !key.isEmpty else { continue }
-            let displayTitle = reminder.title ?? key
+            let originalTitle = reminder.title?.trimmingCharacters(in: .whitespaces) ?? key
             let date = reminder.completionDate ?? Date()
             let listName = reminder.calendar?.title ?? "Reminders"
 
             if grouped[key] != nil {
                 grouped[key]!.dates.append(date)
             } else {
-                grouped[key] = (dates: [date], listName: listName)
-            }
-            // Use the original-cased title
-            if grouped[key] != nil {
-                grouped[displayTitle.lowercased()] = grouped[key]
+                grouped[key] = (dates: [date], listName: listName, originalTitle: originalTitle)
             }
         }
 
         // Only include reminders with 2+ completions
         return grouped.compactMap { key, value in
             guard value.dates.count >= 2 else { return nil }
-            let title = key.prefix(1).uppercased() + key.dropFirst()
+            let title = value.originalTitle
             let (emoji, color) = suggestEmojiAndColor(for: title)
             return ImportableReminder(
                 id: key,

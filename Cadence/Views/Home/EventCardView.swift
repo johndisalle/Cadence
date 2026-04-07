@@ -221,6 +221,8 @@ struct EventCardView: View {
 
         let generator = UIImpactFeedbackGenerator(style: .medium)
         generator.impactOccurred()
+
+        NotificationService.shared.scheduleSmartReminders(for: event)
     }
 
     private func undoLastLog() {
