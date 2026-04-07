@@ -42,7 +42,7 @@ struct StreakShareCard: View {
                     Image(systemName: "flame.fill")
                         .font(.title)
                         .foregroundStyle(.orange)
-                    Text("\(streakDays)-day streak")
+                    Text("\(streakDays) in a row")
                         .font(.title.weight(.heavy))
                         .foregroundStyle(.white)
                 }
