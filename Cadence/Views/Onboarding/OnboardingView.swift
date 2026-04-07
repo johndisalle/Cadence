@@ -8,6 +8,7 @@ struct OnboardingView: View {
     @State private var currentPage = 0
     @State private var selectedTemplates: Set<EventTemplate> = []
     @State private var showAllTemplates = false
+    @State private var showOnboardingPaywall = false
 
     var body: some View {
         TabView(selection: $currentPage) {
@@ -19,6 +20,11 @@ struct OnboardingView: View {
         .indexViewStyle(.page(backgroundDisplayMode: .always))
         .sheet(isPresented: $showAllTemplates) {
             allTemplatesSheet
+        }
+        .fullScreenCover(isPresented: $showOnboardingPaywall) {
+            OnboardingPaywallView {
+                completeOnboarding()
+            }
         }
     }
 
@@ -225,7 +231,8 @@ struct OnboardingView: View {
             Spacer()
 
             Button {
-                completeOnboarding()
+                createEvents()
+                showOnboardingPaywall = true
             } label: {
                 Text("Let's Go!")
                     .font(.headline)
@@ -283,7 +290,7 @@ struct OnboardingView: View {
 
     // MARK: - Actions
 
-    private func completeOnboarding() {
+    private func createEvents() {
         for template in selectedTemplates {
             let event = Event(
                 name: template.name,
@@ -293,10 +300,11 @@ struct OnboardingView: View {
             )
             modelContext.insert(event)
         }
-
-        hasCompletedOnboarding = true
-
         requestNotificationPermission()
+    }
+
+    private func completeOnboarding() {
+        hasCompletedOnboarding = true
     }
 
     private func requestNotificationPermission() {

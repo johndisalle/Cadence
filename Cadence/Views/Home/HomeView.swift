@@ -18,16 +18,26 @@ struct HomeView: View {
     @State private var sortMode: HomeSortMode = .dueSoonest
     @State private var showPaywall = false
     @State private var navigationPath = NavigationPath()
+    @State private var selectedCategory: EventCategory? = nil
 
     var selectedEventID: Binding<UUID?>?
 
     private var premium: PremiumManager { .shared }
 
     private var filteredEvents: [Event] {
-        let base = searchText.isEmpty
-            ? events
-            : events.filter { $0.name.localizedCaseInsensitiveContains(searchText) }
+        var base = events.filter { _ in true }  // start with all
 
+        // Category filter
+        if let category = selectedCategory {
+            base = base.filter { $0.category == category }
+        }
+
+        // Search filter
+        if !searchText.isEmpty {
+            base = base.filter { $0.name.localizedCaseInsensitiveContains(searchText) }
+        }
+
+        // Sort
         switch sortMode {
         case .name:
             return base.sorted { $0.name.localizedCompare($1.name) == .orderedAscending }
@@ -36,6 +46,12 @@ struct HomeView: View {
                 IntervalEngine.dueSoonestScore(for: $0) > IntervalEngine.dueSoonestScore(for: $1)
             }
         }
+    }
+
+    /// Categories that actually have events, for the filter chips
+    private var activeCategories: [EventCategory] {
+        let usedRaws = Set(events.map { $0.categoryRaw })
+        return EventCategory.allCases.filter { usedRaws.contains($0.rawValue) }
     }
 
     private let gridColumns = [
@@ -50,6 +66,9 @@ struct HomeView: View {
                 } else {
                     ScrollView {
                         greetingHeader
+                        if activeCategories.count > 1 {
+                            categoryChips
+                        }
                         if showAsGrid {
                             gridContent
                         } else {
@@ -173,6 +192,51 @@ struct HomeView: View {
         .padding(.horizontal, CadenceTheme.spacingMD)
         .padding(.top, CadenceTheme.spacingSM)
         .padding(.bottom, CadenceTheme.spacingXL)
+    }
+
+    // MARK: - Category Chips
+
+    private var categoryChips: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 8) {
+                chipButton(label: "All", icon: nil, isSelected: selectedCategory == nil) {
+                    withAnimation(.easeInOut(duration: 0.2)) { selectedCategory = nil }
+                }
+                ForEach(activeCategories) { category in
+                    chipButton(
+                        label: category.displayName,
+                        icon: category.icon,
+                        isSelected: selectedCategory == category
+                    ) {
+                        withAnimation(.easeInOut(duration: 0.2)) {
+                            selectedCategory = selectedCategory == category ? nil : category
+                        }
+                    }
+                }
+            }
+            .padding(.horizontal, CadenceTheme.spacingMD)
+            .padding(.vertical, CadenceTheme.spacingXS)
+        }
+    }
+
+    private func chipButton(label: String, icon: String?, isSelected: Bool, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            HStack(spacing: 4) {
+                if let icon {
+                    Image(systemName: icon)
+                        .font(.caption2)
+                }
+                Text(label)
+                    .font(.subheadline.weight(isSelected ? .semibold : .medium))
+            }
+            .padding(.horizontal, 14)
+            .padding(.vertical, 8)
+            .foregroundStyle(isSelected ? .white : CadenceTheme.textSecondary)
+            .background(
+                Capsule().fill(isSelected ? CadenceTheme.teal : CadenceTheme.backgroundSecondary)
+            )
+        }
+        .buttonStyle(.plain)
     }
 
     // MARK: - Sort Picker
