@@ -7,10 +7,6 @@ struct FamilySharingView: View {
 
     @AppStorage("iCloudSyncEnabled") private var iCloudSyncEnabled: Bool = false
 
-    @State private var showEnableAlert = false
-    @State private var showDisableAlert = false
-    @State private var pendingSyncValue = false
-
     private var syncService: CloudSyncService { CloudSyncService.shared }
 
     private var sharedEvents: [Event] {
@@ -24,36 +20,19 @@ struct FamilySharingView: View {
     var body: some View {
         List {
             headerSection
-            syncToggleSection
 
             if iCloudSyncEnabled {
                 syncStatusSection
                 sharedEventsSection
                 personalEventsSection
+            } else {
+                enableSyncPromptSection
             }
 
             setupInstructionsSection
         }
         .navigationTitle("Family Sharing")
         .navigationBarTitleDisplayMode(.large)
-        .alert("Enable iCloud Sync", isPresented: $showEnableAlert) {
-            Button("Enable") {
-                iCloudSyncEnabled = true
-                syncService.syncStatus = .idle
-            }
-            Button("Cancel", role: .cancel) {}
-        } message: {
-            Text("This will enable iCloud sync. Events marked as \"Shared\" will be visible to family members. You can choose which events to share.")
-        }
-        .alert("Disable iCloud Sync", isPresented: $showDisableAlert) {
-            Button("Turn Off", role: .destructive) {
-                iCloudSyncEnabled = false
-                syncService.syncStatus = .disabled
-            }
-            Button("Cancel", role: .cancel) {}
-        } message: {
-            Text("Shared events will remain on this device but stop syncing. Other family members will no longer see updates.")
-        }
     }
 
     // MARK: - Header
@@ -79,33 +58,25 @@ struct FamilySharingView: View {
         }
     }
 
-    // MARK: - Sync Toggle
+    // MARK: - Enable Sync Prompt (when iCloud Sync is off)
 
-    private var syncToggleSection: some View {
+    private var enableSyncPromptSection: some View {
         Section {
-            Toggle(isOn: Binding(
-                get: { iCloudSyncEnabled },
-                set: { newValue in
-                    if newValue {
-                        showEnableAlert = true
-                    } else {
-                        showDisableAlert = true
-                    }
-                }
-            )) {
-                HStack {
-                    Image(systemName: "icloud.fill")
-                        .foregroundStyle(CadenceTheme.teal)
-                    Text("iCloud Sync")
+            VStack(alignment: .leading, spacing: CadenceTheme.spacingSM) {
+                HStack(spacing: CadenceTheme.spacingSM) {
+                    Image(systemName: "icloud.slash")
+                        .font(.title2)
+                        .foregroundStyle(CadenceTheme.textTertiary)
+                    Text("iCloud Sync is Off")
+                        .font(.headline)
                         .foregroundStyle(CadenceTheme.textPrimary)
                 }
+                Text("To share events with family members, turn on \"Sync across my devices\" in Settings → iCloud Sync, then come back here.")
+                    .font(.subheadline)
+                    .foregroundStyle(CadenceTheme.textSecondary)
             }
-            .tint(CadenceTheme.teal)
+            .padding(.vertical, CadenceTheme.spacingXS)
             .listRowBackground(CadenceTheme.backgroundSecondary)
-        } footer: {
-            Text("Requires an active iCloud account signed in on this device.")
-                .font(.caption)
-                .foregroundStyle(CadenceTheme.textTertiary)
         }
     }
 
@@ -194,7 +165,7 @@ struct FamilySharingView: View {
                 instructionRow(number: 1, text: "Open Settings on your iPhone and tap your name at the top.")
                 instructionRow(number: 2, text: "Tap \"Family Sharing\" and set up your family group (or join an existing one).")
                 instructionRow(number: 3, text: "Make sure all family members have Cadence installed.")
-                instructionRow(number: 4, text: "Enable iCloud Sync above, then mark events as \"Shared\" to make them visible to everyone.")
+                instructionRow(number: 4, text: "Turn on \"Sync across my devices\" in Settings → iCloud Sync, then mark events as \"Shared\" to make them visible to everyone.")
             }
             .padding(.vertical, CadenceTheme.spacingXS)
             .listRowBackground(CadenceTheme.backgroundSecondary)

@@ -14,6 +14,7 @@ struct SettingsView: View {
     @State private var showExportSheet = false
     @State private var exportedPDFData: Data?
     @State private var showPaywall = false
+    @State private var showRestartAlert = false
 
     private var premium: PremiumManager { .shared }
 
@@ -36,6 +37,7 @@ struct SettingsView: View {
                 if archivedEventCount > 0 {
                     archivedSection
                 }
+                iCloudSyncSection
                 familySharingSection
                 aboutSection
                 resetSection
@@ -49,6 +51,40 @@ struct SettingsView: View {
             .sheet(isPresented: $showPaywall) {
                 PaywallView()
             }
+            .alert("Restart Cadence", isPresented: $showRestartAlert) {
+                Button("OK", role: .cancel) {}
+            } message: {
+                Text("Restart Cadence to apply sync changes.")
+            }
+        }
+    }
+
+    // MARK: - iCloud Sync
+
+    private var iCloudSyncSection: some View {
+        Section {
+            Toggle(isOn: Binding(
+                get: { iCloudSyncEnabled },
+                set: { newValue in
+                    iCloudSyncEnabled = newValue
+                    showRestartAlert = true
+                }
+            )) {
+                HStack {
+                    Image(systemName: "icloud.fill")
+                        .foregroundStyle(CadenceTheme.teal)
+                    Text("Sync across my devices")
+                        .foregroundStyle(CadenceTheme.textPrimary)
+                }
+            }
+            .tint(CadenceTheme.teal)
+            .listRowBackground(CadenceTheme.backgroundSecondary)
+        } header: {
+            Text("iCloud Sync")
+        } footer: {
+            Text("Keep your events and logs in sync between your iPhone, iPad, and Apple Watch using your private iCloud account. No data leaves your Apple ID.")
+                .font(.caption)
+                .foregroundStyle(CadenceTheme.textTertiary)
         }
     }
 
