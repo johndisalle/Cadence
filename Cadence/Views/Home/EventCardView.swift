@@ -84,18 +84,34 @@ struct EventCardView: View {
                     .foregroundStyle(CadenceTheme.textTertiary)
             }
 
-            // Rhythm + trend arrow
-            if let rhythm = stats?.rhythm {
-                HStack(spacing: 4) {
-                    Text(rhythm)
-                        .font(.caption2.weight(.medium))
-                        .foregroundStyle(CadenceTheme.textSecondary)
+            // Smart prediction — the product's differentiator, made prominent
+            if let stats = stats, stats.averageDays > 0 {
+                VStack(alignment: .leading, spacing: 2) {
+                    HStack(spacing: 4) {
+                        Text("Usually \(stats.rhythm.lowercased())")
+                            .font(.caption.weight(.semibold))
+                            .foregroundStyle(event.accentColor)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.85)
 
-                    if trend != .steady {
-                        Image(systemName: trend.icon)
-                            .font(.caption2.weight(.bold))
-                            .foregroundStyle(Color(hex: trend.colorHex))
+                        if trend != .steady {
+                            Image(systemName: trend.icon)
+                                .font(.caption2.weight(.bold))
+                                .foregroundStyle(Color(hex: trend.colorHex))
+                        }
                     }
+                    Text("\(Int(stats.confidencePercent))% confidence")
+                        .font(.caption2)
+                        .foregroundStyle(CadenceTheme.textTertiary)
+                }
+            } else {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Building your rhythm…")
+                        .font(.caption.weight(.medium).italic())
+                        .foregroundStyle(CadenceTheme.textSecondary)
+                    Text("Log a few times to see predictions")
+                        .font(.caption2)
+                        .foregroundStyle(CadenceTheme.textTertiary)
                 }
             }
 
@@ -223,6 +239,9 @@ struct EventCardView: View {
         generator.impactOccurred()
 
         NotificationService.shared.scheduleSmartReminders(for: event)
+
+        // Notify HomeView so it can fire the first-upsell paywall if needed.
+        NotificationCenter.default.post(name: .cadenceDidLogEvent, object: nil)
     }
 
     private func undoLastLog() {

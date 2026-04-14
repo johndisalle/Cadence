@@ -552,6 +552,11 @@ struct EventDetailView: View {
                 SKStoreReviewController.requestReview(in: scene)
             }
         }
+
+        // Notify HomeView (via NotificationCenter). HomeView is the single
+        // source of truth for the first-upsell paywall — its fullScreenCover
+        // is on the NavigationStack, so it presents over any pushed view too.
+        NotificationCenter.default.post(name: .cadenceDidLogEvent, object: nil)
     }
 
     private func undoLastLog() {

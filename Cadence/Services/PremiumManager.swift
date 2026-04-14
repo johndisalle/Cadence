@@ -134,8 +134,50 @@ final class PremiumManager {
     func canUseInsights() -> Bool {
         isPremium
     }
+
+    // MARK: - First Upsell Tracking
+    //
+    // The user sees the "first upsell" paywall at most once across the
+    // entire app lifetime, triggered by whichever happens first:
+    //   (a) their first successful log action, or
+    //   (b) tapping + while at the upsellEventCountThreshold.
+    // After that, the existing PaywallView entry points (Settings, Insights,
+    // chart blur, hard cap at freeEventLimit) handle subsequent presentations.
+
+    private static let hasShownFirstUpsellKey = "hasShownFirstUpsellPaywall"
+    static let upsellEventCountThreshold = 5  // Show on the 6th event create attempt
+
+    var hasShownFirstUpsell: Bool {
+        get { UserDefaults.standard.bool(forKey: Self.hasShownFirstUpsellKey) }
+        set { UserDefaults.standard.set(newValue, forKey: Self.hasShownFirstUpsellKey) }
+    }
+
+    /// Call AFTER a successful log action. Returns true if the first upsell
+    /// should be presented now. Consumes the flag — subsequent calls return false.
+    func shouldTriggerFirstUpsellAfterLog() -> Bool {
+        guard !isPremium, !hasShownFirstUpsell else { return false }
+        hasShownFirstUpsell = true
+        return true
+    }
+
+    /// Call when the user taps + to add an event. Returns true if the first
+    /// upsell should be presented BEFORE the AddEventView. Consumes the flag.
+    func shouldTriggerFirstUpsellOnAdd(currentCount: Int) -> Bool {
+        guard !isPremium, !hasShownFirstUpsell else { return false }
+        guard currentCount >= Self.upsellEventCountThreshold else { return false }
+        hasShownFirstUpsell = true
+        return true
+    }
 }
 
 enum StoreError: Error {
     case verificationFailed
+}
+
+// MARK: - Notifications
+
+extension Notification.Name {
+    /// Posted after any successful log action (from card, detail, or intent).
+    /// HomeView observes this to fire the first-upsell paywall if needed.
+    static let cadenceDidLogEvent = Notification.Name("cadenceDidLogEvent")
 }

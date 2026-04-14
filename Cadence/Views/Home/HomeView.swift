@@ -17,6 +17,9 @@ struct HomeView: View {
     @State private var showAsGrid = true
     @State private var sortMode: HomeSortMode = .dueSoonest
     @State private var showPaywall = false
+    @State private var showFirstUpsellPaywall = false
+    @State private var pendingAddAfterUpsell = false
+    @State private var showRemindersImport = false
     @State private var navigationPath = NavigationPath()
     @State private var selectedCategory: EventCategory? = nil
 
@@ -95,11 +98,7 @@ struct HomeView: View {
                     .accessibilityLabel(showAsGrid ? "Switch to list" : "Switch to grid")
 
                     Button {
-                        if premium.canAddEvent(currentCount: events.count) {
-                            showAddEvent = true
-                        } else {
-                            showPaywall = true
-                        }
+                        handleAddTap()
                     } label: {
                         Image(systemName: "plus.circle.fill")
                             .imageScale(.large)
@@ -114,6 +113,29 @@ struct HomeView: View {
             .sheet(isPresented: $showPaywall) {
                 PaywallView()
             }
+            .sheet(isPresented: $showRemindersImport) {
+                NavigationStack {
+                    RemindersImportView()
+                }
+            }
+            .fullScreenCover(
+                isPresented: $showFirstUpsellPaywall,
+                onDismiss: {
+                    // Fires regardless of whether user tapped X, "Continue
+                    // with free", or completed a purchase. If the upsell
+                    // was triggered by the + button, present AddEventView next.
+                    if pendingAddAfterUpsell {
+                        pendingAddAfterUpsell = false
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+                            showAddEvent = true
+                        }
+                    }
+                }
+            ) {
+                OnboardingPaywallView {
+                    showFirstUpsellPaywall = false
+                }
+            }
             .navigationDestination(for: Event.self) { event in
                 EventDetailView(event: event)
             }
@@ -124,7 +146,35 @@ struct HomeView: View {
                 }
                 selectedEventID?.wrappedValue = nil
             }
+            .onReceive(NotificationCenter.default.publisher(for: .cadenceDidLogEvent)) { _ in
+                // Brief delay so the log celebration animation lands before
+                // the paywall takes over the screen.
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                    if PremiumManager.shared.shouldTriggerFirstUpsellAfterLog() {
+                        showFirstUpsellPaywall = true
+                    }
+                }
+            }
         }
+    }
+
+    // MARK: - Add Tap Handler
+
+    private func handleAddTap() {
+        // Hard cap first — at freeEventLimit, force the paywall (no skip)
+        if !premium.canAddEvent(currentCount: events.count) {
+            showPaywall = true
+            return
+        }
+        // Soft first-time upsell — at the upsell threshold, show the
+        // dismissible paywall, then continue to AddEventView on dismiss.
+        if premium.shouldTriggerFirstUpsellOnAdd(currentCount: events.count) {
+            pendingAddAfterUpsell = true
+            showFirstUpsellPaywall = true
+            return
+        }
+        // Normal path
+        showAddEvent = true
     }
 
     // MARK: - Greeting Header
@@ -337,6 +387,26 @@ struct HomeView: View {
                     }
                 }
             }
+
+            // Reminders import CTA — for users who already track these in Apple Reminders
+            Button {
+                showRemindersImport = true
+            } label: {
+                HStack(spacing: 6) {
+                    Image(systemName: "square.and.arrow.down")
+                        .font(.caption)
+                    Text("Already tracking these in Reminders? Import them")
+                        .font(.caption.weight(.medium))
+                }
+                .foregroundStyle(CadenceTheme.teal)
+                .padding(.horizontal, CadenceTheme.spacingMD)
+                .padding(.vertical, 10)
+                .background(
+                    Capsule()
+                        .fill(CadenceTheme.teal.opacity(0.08))
+                )
+            }
+            .buttonStyle(.plain)
 
             Button {
                 showAddEvent = true
