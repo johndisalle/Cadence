@@ -11,13 +11,34 @@ struct OnboardingPaywallView: View {
     @State private var errorMessage = ""
 
     private let features: [(icon: String, title: String)] = [
-        ("infinity", "Unlimited events"),
-        ("waveform.path.ecg", "AI Rhythm Insights"),
-        ("chart.xyaxis.line", "Advanced interval charts"),
-        ("doc.richtext", "PDF export summaries"),
-        ("person.2.fill", "Family Sharing sync"),
-        ("bell.badge.fill", "Smart reminders"),
+        ("infinity", "Unlimited events (free: 8)"),
+        ("waveform.path.ecg", "AI Rhythm Insights with weekly Pulse score"),
+        ("chart.xyaxis.line", "Beautiful interval charts and trend analysis"),
+        ("doc.richtext", "PDF export — share with family or landlords"),
+        ("person.2.fill", "Family Sharing via iCloud"),
+        ("bell.badge.fill", "Smart reminders tuned to your rhythm"),
     ]
+
+    // Dynamic copy based on the currently selected tier.
+    private var headerSubtitle: String {
+        if selectedProduct?.id == PremiumManager.lifetimeID {
+            return "One payment. Yours forever."
+        } else if selectedProduct?.id == PremiumManager.yearlyID {
+            return "Start your free 3-day trial"
+        } else {
+            return "Unlock everything in Cadence"
+        }
+    }
+
+    private var ctaButtonLabel: String {
+        if selectedProduct?.id == PremiumManager.lifetimeID {
+            return "Get Lifetime Access"
+        } else if selectedProduct?.id == PremiumManager.yearlyID {
+            return "Start Free Trial"
+        } else {
+            return "Continue"
+        }
+    }
 
     var body: some View {
         VStack(spacing: 0) {
@@ -39,7 +60,7 @@ struct OnboardingPaywallView: View {
                         Text("Unlock Cadence Pro")
                             .font(.title.weight(.bold))
 
-                        Text("Start your free 3-day trial")
+                        Text(headerSubtitle)
                             .font(.subheadline)
                             .foregroundStyle(CadenceTheme.textSecondary)
                     }
@@ -87,7 +108,7 @@ struct OnboardingPaywallView: View {
                         if isPurchasing {
                             ProgressView().tint(.white)
                         } else {
-                            Text("Start Free Trial")
+                            Text(ctaButtonLabel)
                                 .font(.headline)
                         }
                     }
@@ -106,6 +127,12 @@ struct OnboardingPaywallView: View {
                 }
                 .disabled(isPurchasing)
                 .padding(.horizontal, CadenceTheme.spacingLG)
+
+                // TODO: Replace with real user testimonial once we have reviews.
+                // Target format: short quote (<140 chars) + first name +
+                // "Cadence user since [month]". Pull from App Store reviews
+                // or direct user feedback.
+                // TestimonialCard(quote: "...", name: "...", since: "...")
 
                 Button {
                     Task { await premiumManager.restorePurchases() }
@@ -131,7 +158,9 @@ struct OnboardingPaywallView: View {
         }
         .task {
             await premiumManager.loadProducts()
-            selectedProduct = premiumManager.products.first { $0.id == PremiumManager.yearlyID }
+            // Default to lifetime (hero), fall back to yearly, then first available.
+            selectedProduct = premiumManager.products.first { $0.id == PremiumManager.lifetimeID }
+                ?? premiumManager.products.first { $0.id == PremiumManager.yearlyID }
                 ?? premiumManager.products.first
         }
         .alert("Purchase Error", isPresented: $showError) {
@@ -162,107 +191,110 @@ struct OnboardingPaywallView: View {
     // MARK: - Pricing
 
     private var pricingSection: some View {
-        VStack(spacing: CadenceTheme.spacingSM) {
+        VStack(spacing: CadenceTheme.spacingMD) {
             if premiumManager.products.isEmpty {
-                // Fallback when StoreKit products aren't configured
+                // Fallback when StoreKit products aren't configured yet.
+                // Lifetime is the hero; yearly is secondary.
+                pricingCard(
+                    name: "Lifetime",
+                    detail: "$59.99 · one-time purchase, yours forever",
+                    isSelected: true,
+                    isHero: true
+                )
                 pricingCard(
                     name: "Yearly",
-                    detail: "3 days free, then $19.99/year",
-                    isSelected: true,
-                    isBest: true
-                )
-                pricingCard(
-                    name: "Monthly",
-                    detail: "$2.99/month",
+                    detail: "3 days free, then $24.99/year",
                     isSelected: false,
-                    isBest: false
+                    isHero: false
                 )
             } else {
-                ForEach(premiumManager.products.filter { $0.id != PremiumManager.lifetimeID }, id: \.id) { product in
-                    let isYearly = product.id == PremiumManager.yearlyID
-                    let isSelected = selectedProduct?.id == product.id
-
-                    Button {
-                        selectedProduct = product
-                    } label: {
-                        HStack {
-                            VStack(alignment: .leading, spacing: 2) {
-                                HStack(spacing: 8) {
-                                    Text(product.displayName)
-                                        .font(.subheadline.weight(.semibold))
-                                    if isYearly {
-                                        Text("Best Value")
-                                            .font(.caption2.weight(.bold))
-                                            .foregroundStyle(.white)
-                                            .padding(.horizontal, 8)
-                                            .padding(.vertical, 2)
-                                            .background(Capsule().fill(CadenceTheme.teal))
-                                    }
-                                }
-                                if isYearly {
-                                    Text("3 days free, then \(product.displayPrice)/year")
-                                        .font(.caption)
-                                        .foregroundStyle(CadenceTheme.textSecondary)
-                                } else {
-                                    Text("\(product.displayPrice)/month")
-                                        .font(.caption)
-                                        .foregroundStyle(CadenceTheme.textSecondary)
-                                }
-                            }
-                            Spacer()
-                            Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
-                                .font(.title3)
-                                .foregroundStyle(isSelected ? CadenceTheme.teal : CadenceTheme.textTertiary)
-                        }
-                        .padding(CadenceTheme.cardPadding)
-                        .background(
-                            RoundedRectangle(cornerRadius: 14)
-                                .fill(CadenceTheme.backgroundSecondary)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 14)
-                                        .strokeBorder(isSelected ? CadenceTheme.teal : .clear, lineWidth: 2)
-                                )
-                        )
+                // Lifetime first (hero), then yearly. Monthly is filtered out.
+                let visible = premiumManager.products
+                    .filter { $0.id != PremiumManager.monthlyID }
+                    .sorted { a, b in
+                        // Lifetime always first
+                        if a.id == PremiumManager.lifetimeID { return true }
+                        if b.id == PremiumManager.lifetimeID { return false }
+                        return a.price < b.price
                     }
-                    .buttonStyle(.plain)
+
+                ForEach(visible, id: \.id) { product in
+                    let isLifetime = product.id == PremiumManager.lifetimeID
+                    let isSelected = selectedProduct?.id == product.id
+                    let detail: String = {
+                        if isLifetime {
+                            return "\(product.displayPrice) · one-time purchase, yours forever"
+                        } else {
+                            return "3 days free, then \(product.displayPrice)/year"
+                        }
+                    }()
+
+                    pricingCard(
+                        name: product.displayName,
+                        detail: detail,
+                        isSelected: isSelected,
+                        isHero: isLifetime
+                    ) {
+                        selectedProduct = product
+                    }
                 }
             }
         }
     }
 
-    private func pricingCard(name: String, detail: String, isSelected: Bool, isBest: Bool) -> some View {
-        HStack {
-            VStack(alignment: .leading, spacing: 2) {
-                HStack(spacing: 8) {
+    private func pricingCard(
+        name: String,
+        detail: String,
+        isSelected: Bool,
+        isHero: Bool,
+        action: @escaping () -> Void = {}
+    ) -> some View {
+        Button(action: action) {
+            HStack {
+                VStack(alignment: .leading, spacing: 4) {
                     Text(name)
-                        .font(.subheadline.weight(.semibold))
-                    if isBest {
-                        Text("Best Value")
-                            .font(.caption2.weight(.bold))
-                            .foregroundStyle(.white)
-                            .padding(.horizontal, 8)
-                            .padding(.vertical, 2)
-                            .background(Capsule().fill(CadenceTheme.teal))
-                    }
+                        .font(isHero ? .title3.weight(.bold) : .subheadline.weight(.semibold))
+                        .foregroundStyle(CadenceTheme.textPrimary)
+                    Text(detail)
+                        .font(isHero ? .subheadline : .caption)
+                        .foregroundStyle(CadenceTheme.textSecondary)
                 }
-                Text(detail)
-                    .font(.caption)
-                    .foregroundStyle(CadenceTheme.textSecondary)
+                Spacer()
+                Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
+                    .font(.title3)
+                    .foregroundStyle(isSelected ? CadenceTheme.teal : CadenceTheme.textTertiary)
             }
-            Spacer()
-            Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
-                .font(.title3)
-                .foregroundStyle(isSelected ? CadenceTheme.teal : CadenceTheme.textTertiary)
+            .padding(.horizontal, CadenceTheme.cardPadding)
+            .padding(.vertical, isHero ? 22 : CadenceTheme.cardPadding)
+            .background(
+                RoundedRectangle(cornerRadius: 14)
+                    .fill(CadenceTheme.backgroundSecondary)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 14)
+                            .strokeBorder(
+                                isHero ? CadenceTheme.teal : (isSelected ? CadenceTheme.teal : .clear),
+                                lineWidth: isHero ? 3 : 2
+                            )
+                    )
+                    .shadow(
+                        color: isHero ? CadenceTheme.teal.opacity(0.25) : .clear,
+                        radius: isHero ? 10 : 0,
+                        y: isHero ? 4 : 0
+                    )
+            )
+            .overlay(alignment: .topTrailing) {
+                if isHero {
+                    Text("BEST VALUE · ONE PAYMENT, YOURS FOREVER")
+                        .font(.caption2.weight(.bold))
+                        .foregroundStyle(.white)
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 4)
+                        .background(Capsule().fill(CadenceTheme.teal))
+                        .offset(x: -12, y: -10)
+                }
+            }
         }
-        .padding(CadenceTheme.cardPadding)
-        .background(
-            RoundedRectangle(cornerRadius: 14)
-                .fill(CadenceTheme.backgroundSecondary)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 14)
-                        .strokeBorder(isSelected ? CadenceTheme.teal : .clear, lineWidth: 2)
-                )
-        )
+        .buttonStyle(.plain)
     }
 
     // MARK: - Actions

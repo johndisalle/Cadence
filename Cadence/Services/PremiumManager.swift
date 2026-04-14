@@ -9,6 +9,8 @@ final class PremiumManager {
 
     // Product IDs — configure these in App Store Connect
     static let monthlyID = "com.cadence.app.pro.monthly"
+    // monthly removed from UI Apr 2026 — kept for entitlement lookup
+    // only, do not re-add to loadProducts.
     static let yearlyID = "com.cadence.app.pro.yearly"
     static let lifetimeID = "com.cadence.app.pro.lifetimev2"
 
@@ -38,8 +40,12 @@ final class PremiumManager {
     func loadProducts() async {
         isLoading = true
         do {
+            // Only fetch products that appear in the UI. Monthly is
+            // deliberately excluded — it was removed from the UI in
+            // Apr 2026. checkEntitlements() still honors existing
+            // monthly subscribers via Transaction.currentEntitlements,
+            // so legacy subscribers don't lose Pro access.
             products = try await Product.products(for: [
-                Self.monthlyID,
                 Self.yearlyID,
                 Self.lifetimeID
             ])
