@@ -108,14 +108,6 @@ struct OnboardingPaywallView: View {
                 .padding(.horizontal, CadenceTheme.spacingLG)
 
                 Button {
-                    onContinue()
-                } label: {
-                    Text("Continue with free")
-                        .font(.subheadline)
-                        .foregroundStyle(CadenceTheme.textTertiary)
-                }
-
-                Button {
                     Task { await premiumManager.restorePurchases() }
                 } label: {
                     Text("Restore Purchases")
@@ -132,6 +124,11 @@ struct OnboardingPaywallView: View {
             .background(CadenceTheme.backgroundPrimary)
         }
         .background(CadenceTheme.backgroundPrimary)
+        .overlay(alignment: .topTrailing) {
+            closeButton
+                .padding(.top, 16)
+                .padding(.trailing, 16)
+        }
         .task {
             await premiumManager.loadProducts()
             selectedProduct = premiumManager.products.first { $0.id == PremiumManager.yearlyID }
@@ -142,6 +139,24 @@ struct OnboardingPaywallView: View {
         } message: {
             Text(errorMessage)
         }
+    }
+
+    // MARK: - Close Button
+
+    private var closeButton: some View {
+        Button {
+            onContinue()
+        } label: {
+            Image(systemName: "xmark")
+                .font(.title2.weight(.semibold))
+                .foregroundStyle(.primary)
+                .frame(width: 44, height: 44)
+                .background(
+                    Circle()
+                        .fill(Color(.tertiarySystemFill))
+                )
+        }
+        .accessibilityLabel("Close")
     }
 
     // MARK: - Pricing

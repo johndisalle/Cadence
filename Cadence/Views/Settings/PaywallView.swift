@@ -20,41 +20,50 @@ struct PaywallView: View {
     ]
 
     var body: some View {
-        NavigationStack {
-            ScrollView {
-                VStack(spacing: CadenceTheme.spacingLG) {
-                    headerSection
-                    featuresSection
-                    pricingSection
-                    legalSection
-                }
-                .padding(.horizontal, CadenceTheme.spacingMD)
-                .padding(.bottom, CadenceTheme.spacingXL)
+        ScrollView {
+            VStack(spacing: CadenceTheme.spacingLG) {
+                headerSection
+                featuresSection
+                pricingSection
+                legalSection
             }
-            .background(CadenceTheme.backgroundPrimary)
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        dismiss()
-                    } label: {
-                        Image(systemName: "xmark.circle.fill")
-                            .font(.title3)
-                            .foregroundStyle(.secondary)
-                    }
-                }
-            }
-            .task {
-                await premiumManager.loadProducts()
-                selectedProduct = premiumManager.products.first { $0.id == PremiumManager.yearlyID }
-                    ?? premiumManager.products.first
-            }
-            .alert("Purchase Error", isPresented: $showError) {
-                Button("OK") {}
-            } message: {
-                Text(errorMessage)
-            }
+            .padding(.horizontal, CadenceTheme.spacingMD)
+            .padding(.bottom, CadenceTheme.spacingXL)
         }
+        .background(CadenceTheme.backgroundPrimary)
+        .overlay(alignment: .topTrailing) {
+            closeButton
+                .padding(.top, 16)
+                .padding(.trailing, 16)
+        }
+        .task {
+            await premiumManager.loadProducts()
+            selectedProduct = premiumManager.products.first { $0.id == PremiumManager.yearlyID }
+                ?? premiumManager.products.first
+        }
+        .alert("Purchase Error", isPresented: $showError) {
+            Button("OK") {}
+        } message: {
+            Text(errorMessage)
+        }
+    }
+
+    // MARK: - Close Button
+
+    private var closeButton: some View {
+        Button {
+            dismiss()
+        } label: {
+            Image(systemName: "xmark")
+                .font(.title2.weight(.semibold))
+                .foregroundStyle(.primary)
+                .frame(width: 44, height: 44)
+                .background(
+                    Circle()
+                        .fill(Color(.tertiarySystemFill))
+                )
+        }
+        .accessibilityLabel("Close")
     }
 
     // MARK: - Header
