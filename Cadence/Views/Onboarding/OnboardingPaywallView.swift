@@ -197,7 +197,7 @@ struct OnboardingPaywallView: View {
                 // Lifetime is the hero; yearly is secondary.
                 pricingCard(
                     name: "Lifetime",
-                    detail: "$59.99 · one-time purchase, yours forever",
+                    detail: "$49.99 · one-time purchase, yours forever",
                     isSelected: true,
                     isHero: true
                 )

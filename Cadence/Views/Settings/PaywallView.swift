@@ -242,7 +242,7 @@ struct PaywallView: View {
         VStack(spacing: CadenceTheme.spacingMD) {
             pricingPlaceholder(
                 name: "Lifetime",
-                price: "$59.99",
+                price: "$49.99",
                 description: "One-time purchase, yours forever",
                 isHero: true
             )
